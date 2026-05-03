@@ -60,18 +60,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setUser(session.user);
 
           // Try fetching profile with a 3-second timeout
-          const controller = new AbortController();
-          const profileTimeout = setTimeout(() => controller.abort(), 3000);
-
           try {
-            const { data, error } = await supabase
+            const profilePromise = supabase
               .from('profiles')
               .select('*')
               .eq('id', session.user.id)
-              .single()
-              .abortSignal(controller.signal);
+              .single();
 
-            clearTimeout(profileTimeout);
+            const timeoutPromise = new Promise((_, reject) =>
+              setTimeout(() => reject(new Error('timeout')), 3000)
+            );
+
+            const { data, error } = await Promise.race([profilePromise, timeoutPromise]) as any;
 
             if (!error && data && mounted) {
               setProfile(data);
@@ -79,7 +79,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               setProfile(buildFallbackProfile(session.user));
             }
           } catch {
-            clearTimeout(profileTimeout);
             if (mounted) {
               setProfile(buildFallbackProfile(session.user));
             }
