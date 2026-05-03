@@ -25,26 +25,59 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
   const supabase = createClient();
 
+  const fetchProfile = async (userId: string, userEmail: string, userMeta: any) => {
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .single();
+
+      if (!error && data) {
+        setProfile(data);
+      } else {
+        // Profile doesn't exist or RLS blocked — use auth metadata as fallback
+        setProfile({
+          id: userId,
+          email: userEmail,
+          full_name: userMeta?.full_name || userEmail.split('@')[0],
+          role: userMeta?.role || 'opd',
+          nama_instansi: userMeta?.nama_instansi || '',
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        });
+      }
+    } catch {
+      // Network error — use auth metadata as fallback
+      setProfile({
+        id: userId,
+        email: userEmail,
+        full_name: userMeta?.full_name || userEmail.split('@')[0],
+        role: userMeta?.role || 'opd',
+        nama_instansi: userMeta?.nama_instansi || '',
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      });
+    }
+  };
+
   useEffect(() => {
+    let mounted = true;
+
     const getUser = async () => {
       try {
         const { data: { user } } = await supabase.auth.getUser();
-        setUser(user);
+
+        if (!mounted) return;
 
         if (user) {
-          const { data, error } = await supabase
-            .from('profiles')
-            .select('*')
-            .eq('id', user.id)
-            .single();
-          if (!error && data) {
-            setProfile(data);
-          }
+          setUser(user);
+          await fetchProfile(user.id, user.email || '', user.user_metadata);
         }
       } catch (err) {
         console.error('Auth error:', err);
       } finally {
-        setLoading(false);
+        if (mounted) setLoading(false);
       }
     };
 
@@ -52,28 +85,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (_event, session) => {
-        setUser(session?.user ?? null);
+        if (!mounted) return;
+
         if (session?.user) {
-          try {
-            const { data, error } = await supabase
-              .from('profiles')
-              .select('*')
-              .eq('id', session.user.id)
-              .single();
-            if (!error && data) {
-              setProfile(data);
-            }
-          } catch (err) {
-            console.error('Profile fetch error:', err);
-          }
+          setUser(session.user);
+          await fetchProfile(session.user.id, session.user.email || '', session.user.user_metadata);
         } else {
+          setUser(null);
           setProfile(null);
         }
-        setLoading(false);
+        if (mounted) setLoading(false);
       }
     );
 
-    return () => subscription.unsubscribe();
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   const signOut = async () => {
