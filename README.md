@@ -1,59 +1,73 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🏛️ E-Kuesioner Evaluasi Tingkat Kematangan SDM & Organisasi
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Sistem E-Kuesioner untuk evaluasi tingkat kematangan SDM & Organisasi Perangkat Daerah berdasarkan **Permendagri No 99 Tahun 2018**.
 
-## About Laravel
+## 🚀 Tech Stack
+- **Next.js 14** (App Router)
+- **Supabase** (PostgreSQL + Auth + RLS)
+- **React Hook Form** + Zod Validation
+- **Recharts** (Charts & Graphs)
+- **XLSX** (Excel Export)
+- **Vercel** (Deployment)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 📦 Setup
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### 1. Install Dependencies
+```bash
+npm install
+```
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 2. Setup Supabase
+1. Buat project baru di [supabase.com](https://supabase.com)
+2. Copy file `.env.local.example` ke `.env.local`
+3. Isi dengan credentials dari Supabase Dashboard:
+   ```
+   NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+   SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+   ```
 
-## Learning Laravel
+### 3. Setup Database
+1. Buka **SQL Editor** di Supabase Dashboard
+2. Jalankan file `supabase/migration.sql`
+3. Ini akan membuat:
+   - Tabel `profiles`, `variabel_evaluasi`, `transaksi_evaluasi`, `detail_jawaban`
+   - Seed 11 variabel instrumen wajib
+   - RLS policies untuk keamanan data
+   - Trigger auto-create profile saat user signup
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+### 4. Setup Admin User
+Setelah mendaftar user pertama, ubah role-nya menjadi `admin` di Supabase:
+```sql
+UPDATE profiles SET role = 'admin' WHERE email = 'admin@yourdomain.com';
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 5. Run Development
+```bash
+npm run dev
+```
+Buka http://localhost:3000
 
-## Laravel Sponsors
+## 🌐 Deploy ke Vercel
+1. Push ke GitHub
+2. Import project di [vercel.com](https://vercel.com)
+3. Tambahkan Environment Variables (sama seperti `.env.local`)
+4. Deploy!
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## 📋 Fitur
+- ✅ **Auth & RLS** — Role-based access (Admin, Operator, OPD)
+- ✅ **11 Variabel Evaluasi** — Sesuai Permendagri No 99/2018
+- ✅ **Form Kuesioner Dinamis** — Conditional URL input untuk Data Dukung
+- ✅ **Engine Perhitungan** — Scoring otomatis & mapping level kematangan
+- ✅ **Dashboard Analitik** — Charts, ranking, statistik
+- ✅ **Detail Jawaban** — Tombol "Lihat Bukti" untuk buka Google Drive
+- ✅ **Export Excel** — Download data ke format .xlsx
 
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 📊 Level Kematangan
+| Skor | Level | Label |
+|------|-------|-------|
+| 0 – 1.5 | Level 1 | Initial |
+| 1.6 – 2.5 | Level 2 | Developing |
+| 2.6 – 3.5 | Level 3 | Defined |
+| 3.6 – 4.5 | Level 4 | Managed |
+| 4.6 – 5.0 | Level 5 | Optimized |
