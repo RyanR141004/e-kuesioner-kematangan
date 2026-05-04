@@ -19,6 +19,7 @@ export default function Sidebar() {
     { href: '/kuesioner', label: 'Isi Kuesioner', icon: '📝', hideFor: ['admin'] },
     { href: '/dashboard/ranking', label: 'Ranking OPD', icon: '🏆' },
     { href: '/dashboard/detail', label: 'Detail Jawaban', icon: '📋' },
+    { href: '/dashboard/laporan', label: 'Laporan', icon: '📄' },
     ...(isAdmin ? [
       { href: '/admin/users', label: 'Kelola Pengguna', icon: '👥' },
     ] : []),
