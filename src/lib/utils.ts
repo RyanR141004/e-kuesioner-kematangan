@@ -108,12 +108,44 @@ export function isValidUrl(url: string): boolean {
 }
 
 /**
- * Tingkat labels
+ * Tingkat labels with detailed descriptions
  */
 export const TINGKAT_OPTIONS = [
-  { value: 1, label: 'Tingkat I (Initial)', desc: 'Tanpa Data Dukung' },
-  { value: 2, label: 'Tingkat II (Developing)', desc: 'Memerlukan Data Dukung' },
-  { value: 3, label: 'Tingkat III (Defined)', desc: 'Memerlukan Data Dukung' },
-  { value: 4, label: 'Tingkat IV (Managed)', desc: 'Memerlukan Data Dukung' },
-  { value: 5, label: 'Tingkat V (Optimized)', desc: 'Memerlukan Data Dukung' },
+  { value: 1, label: 'Tingkat I (Initial)', desc: 'Belum ada prosedur/mekanisme yang terdokumentasi. Pelaksanaan bersifat ad-hoc.', needBukti: false },
+  { value: 2, label: 'Tingkat II (Developing)', desc: 'Sudah ada prosedur awal namun belum terdokumentasi secara formal dan belum konsisten diterapkan.', needBukti: true },
+  { value: 3, label: 'Tingkat III (Defined)', desc: 'Prosedur sudah terdokumentasi dalam SOP dan diterapkan secara konsisten di seluruh unit.', needBukti: true },
+  { value: 4, label: 'Tingkat IV (Managed)', desc: 'Prosedur sudah terukur, dimonitoring secara berkala, dan ada mekanisme evaluasi untuk perbaikan.', needBukti: true },
+  { value: 5, label: 'Tingkat V (Optimized)', desc: 'Sistem sudah optimal, terintegrasi, berbasis data, dan dilakukan inovasi berkelanjutan.', needBukti: true },
+];
+
+/**
+ * Daftar 26 Kelembagaan
+ */
+export const DAFTAR_KELEMBAGAAN = [
+  'Sekretariat Daerah',
+  'Badan Pendapatan Daerah',
+  'Dinas Komunikasi dan Informatika',
+  'Badan Perencanaan Pembangunan Daerah',
+  'Dinas Lingkungan Hidup',
+  'Dinas Tenaga Kerja, Penanaman Modal dan Pelayanan Terpadu Satu Pintu',
+  'Dinas Perpustakaan Umum dan Arsip Daerah',
+  'Dinas Kependudukan dan Pencatatan Sipil',
+  'Satuan Polisi Pamong Praja',
+  'Badan Kepegawaian dan Pengembangan SDM',
+  'Dinas Kepemudaan, Olahraga, dan Pariwisata',
+  'Dinas Kesehatan',
+  'Dinas Perhubungan',
+  'Dinas Koperasi, Perindustrian, dan Perdagangan',
+  'Sekretariat DPRD',
+  'Dinas Pekerjaan Umum, Penataan Ruang, Perumahan, dan Kawasan Permukiman',
+  'Inspektorat Daerah',
+  'Dinas Pendidikan dan Kebudayaan',
+  'Dinas Ketahanan Pangan dan Pertanian',
+  'Badan Keuangan dan Aset Daerah',
+  'Kecamatan Klojen',
+  'Kecamatan Kedungkandang',
+  'Kecamatan Sukun',
+  'Badan Kesatuan Bangsa dan Politik',
+  'Dinas Sosial, Pemberdayaan Perempuan, Perlindungan Anak, Pengendalian Penduduk dan KB',
+  'Kecamatan Blimbing',
 ];

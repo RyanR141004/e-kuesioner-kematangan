@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
+import { DAFTAR_KELEMBAGAAN } from '@/lib/utils';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -118,15 +119,19 @@ export default function LoginPage() {
                 />
               </div>
               <div className="form-group">
-                <label className="form-label">Nama Instansi/OPD</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  placeholder="Contoh: Dinas Pendidikan"
+                <label className="form-label">Pilih Kelembagaan</label>
+                <select
+                  className="form-select"
                   value={namaInstansi}
                   onChange={(e) => setNamaInstansi(e.target.value)}
                   required
-                />
+                  style={{ width: '100%' }}
+                >
+                  <option value="">-- Pilih Kelembagaan --</option>
+                  {DAFTAR_KELEMBAGAAN.map((k) => (
+                    <option key={k} value={k}>{k}</option>
+                  ))}
+                </select>
               </div>
             </>
           )}

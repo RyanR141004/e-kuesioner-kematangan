@@ -42,7 +42,7 @@ export default function Sidebar() {
           <div className="sidebar-logo-icon">EK</div>
           <div>
             <div className="sidebar-logo-text">E-Kuesioner</div>
-            <div className="sidebar-logo-sub">Kematangan SDM</div>
+            <div className="sidebar-logo-sub">Kematangan PD</div>
           </div>
         </div>
 

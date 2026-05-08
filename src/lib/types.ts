@@ -15,7 +15,14 @@ export interface VariabelEvaluasi {
   nama_variabel: string;
   deskripsi: string;
   urutan: number;
+  link_petunjuk: string | null;
   created_at: string;
+}
+
+export interface Kelembagaan {
+  id: string;
+  nama: string;
+  urutan: number;
 }
 
 export interface TransaksiEvaluasi {
