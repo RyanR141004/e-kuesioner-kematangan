@@ -92,8 +92,8 @@ export default function LaporanPage() {
 
     // Sheet 2: Detail per OPD
     const detailData: any[] = [];
-    transaksi.forEach((t) => {
-      t.detail_jawaban?.forEach((d) => {
+    transaksi.forEach((t: any) => {
+      t.detail_jawaban?.forEach((d: any) => {
         detailData.push({
           'Kelembagaan': t.kelembagaan?.nama || t.profiles?.nama_instansi || 'N/A',
           'Variabel': d.variabel_evaluasi?.nama_variabel || 'N/A',
