@@ -5,12 +5,12 @@ import { useForm, useFieldArray } from 'react-hook-form';
 import { createClient } from '@/lib/supabase/client';
 import { useAuth } from '@/components/AuthProvider';
 import { TINGKAT_OPTIONS } from '@/lib/utils';
-import type { VariabelEvaluasi } from '@/lib/types';
+import type { VariabelEvaluasi, Kelembagaan } from '@/lib/types';
 import { useRouter } from 'next/navigation';
 
 interface FormValues {
+  kelembagaan_id: string;
   periode_tahun: number;
-  jenis_evaluasi: string;
   jawaban: {
     variabel_id: string;
     nama_variabel: string;
@@ -27,14 +27,15 @@ export default function KuesionerPage() {
   const router = useRouter();
   const supabase = createClient();
   const [variabel, setVariabel] = useState<VariabelEvaluasi[]>([]);
+  const [kelembagaanList, setKelembagaanList] = useState<Kelembagaan[]>([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [toast, setToast] = useState<{ type: string; message: string } | null>(null);
 
   const { register, handleSubmit, watch, setValue, control } = useForm<FormValues>({
     defaultValues: {
+      kelembagaan_id: '',
       periode_tahun: new Date().getFullYear(),
-      jenis_evaluasi: 'Evaluasi Manajemen SDM',
       jawaban: [],
     },
   });
@@ -43,7 +44,16 @@ export default function KuesionerPage() {
 
   useEffect(() => {
     fetchVariabel();
+    fetchKelembagaan();
   }, []);
+
+  const fetchKelembagaan = async () => {
+    const { data } = await supabase
+      .from('kelembagaan')
+      .select('*')
+      .order('urutan', { ascending: true });
+    if (data) setKelembagaanList(data);
+  };
 
   const fetchVariabel = async () => {
     const { data } = await supabase
@@ -72,6 +82,12 @@ export default function KuesionerPage() {
   };
 
   const onSubmit = async (data: FormValues) => {
+    // Validate kelembagaan selected
+    if (!data.kelembagaan_id) {
+      showToast('error', 'Silakan pilih Kelembagaan terlebih dahulu');
+      return;
+    }
+
     // Validate all questions answered
     for (const j of data.jawaban) {
       if (!j.tingkat_capaian || j.tingkat_capaian === 0) {
@@ -104,8 +120,8 @@ export default function KuesionerPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           opd_id: profile?.id,
+          kelembagaan_id: data.kelembagaan_id,
           periode_tahun: data.periode_tahun,
-          jenis_evaluasi: data.jenis_evaluasi,
           jawaban: data.jawaban.map((j) => ({
             variabel_id: j.variabel_id,
             tingkat_capaian: j.tingkat_capaian,
@@ -159,12 +175,21 @@ export default function KuesionerPage() {
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)}>
-        {/* Periode & Jenis */}
+        {/* Identitas Evaluasi */}
         <div className="card" style={{ marginBottom: 24 }}>
           <div className="card-header">
             <div className="card-title">📋 Identitas Evaluasi</div>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+            <div className="form-group" style={{ marginBottom: 0 }}>
+              <label className="form-label">Pilih Kelembagaan <span className="form-required">*</span></label>
+              <select className="form-select" {...register('kelembagaan_id')} required>
+                <option value="">-- Pilih Kelembagaan --</option>
+                {kelembagaanList.map((k) => (
+                  <option key={k.id} value={k.id}>{k.nama}</option>
+                ))}
+              </select>
+            </div>
             <div className="form-group" style={{ marginBottom: 0 }}>
               <label className="form-label">Periode Tahun</label>
               <select className="form-select" {...register('periode_tahun', { valueAsNumber: true })}>
@@ -173,24 +198,7 @@ export default function KuesionerPage() {
                 ))}
               </select>
             </div>
-            <div className="form-group" style={{ marginBottom: 0 }}>
-              <label className="form-label">Jenis Evaluasi</label>
-              <select className="form-select" {...register('jenis_evaluasi')}>
-                <option value="Evaluasi Manajemen SDM">Evaluasi Manajemen SDM</option>
-                <option value="Evaluasi Organisasi">Evaluasi Organisasi</option>
-              </select>
-            </div>
           </div>
-        </div>
-
-        {/* Info kelembagaan */}
-        <div style={{
-          padding: '14px 20px', marginBottom: 24, borderRadius: 12,
-          background: 'rgba(99,102,241,0.1)', border: '1px solid rgba(99,102,241,0.25)',
-          display: 'flex', alignItems: 'center', gap: 10, fontSize: 14, color: 'var(--text-secondary)',
-        }}>
-          <span style={{ fontSize: 20 }}>🏛️</span>
-          Kelembagaan: <strong style={{ color: 'var(--text-primary)' }}>{profile?.nama_instansi || '-'}</strong>
         </div>
 
         {/* Questions - Card based */}

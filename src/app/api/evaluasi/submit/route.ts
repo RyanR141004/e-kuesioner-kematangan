@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server';
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { opd_id, periode_tahun, jenis_evaluasi, jawaban } = body;
+    const { opd_id, kelembagaan_id, periode_tahun, jawaban } = body;
 
     // Validate input
     if (!opd_id || !jawaban || !Array.isArray(jawaban) || jawaban.length === 0) {
@@ -62,8 +62,8 @@ export async function POST(request: Request) {
       .from('transaksi_evaluasi')
       .insert({
         opd_id,
+        kelembagaan_id: kelembagaan_id || null,
         periode_tahun: periode_tahun || new Date().getFullYear(),
-        jenis_evaluasi: jenis_evaluasi || 'Evaluasi Manajemen SDM',
         total_skor: totalSkor,
         level_kematangan: levelKematangan,
         status: 'submitted',

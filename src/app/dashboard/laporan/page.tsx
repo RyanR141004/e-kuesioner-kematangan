@@ -49,10 +49,7 @@ function getRekomendasi(level: number): string[] {
 }
 
 export default function LaporanPage() {
-  const [transaksi, setTransaksi] = useState<(TransaksiEvaluasi & {
-    profiles: { nama_instansi: string; full_name: string };
-    detail_jawaban: (DetailJawaban & { variabel_evaluasi: VariabelEvaluasi })[];
-  })[]>([]);
+  const [transaksi, setTransaksi] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [filterYear, setFilterYear] = useState(new Date().getFullYear());
   const [generating, setGenerating] = useState(false);
@@ -66,7 +63,7 @@ export default function LaporanPage() {
     setLoading(true);
     const { data } = await supabase
       .from('transaksi_evaluasi')
-      .select('*, profiles(nama_instansi, full_name), detail_jawaban(*, variabel_evaluasi(*))')
+      .select('*, profiles(nama_instansi, full_name), kelembagaan(nama), detail_jawaban(*, variabel_evaluasi(*))')
       .eq('periode_tahun', filterYear)
       .order('total_skor', { ascending: false });
     setTransaksi(data || []);
@@ -83,7 +80,7 @@ export default function LaporanPage() {
       const level = getMaturityLevel(t.total_skor || 0);
       return {
         'Ranking': i + 1,
-        'OPD/Instansi': t.profiles?.nama_instansi || 'N/A',
+        'Kelembagaan': t.kelembagaan?.nama || t.profiles?.nama_instansi || 'N/A',
         'Penanggung Jawab': t.profiles?.full_name || 'N/A',
         'Total Skor': t.total_skor,
         'Level Kematangan': `Level ${level.level} (${level.label})`,
@@ -98,7 +95,7 @@ export default function LaporanPage() {
     transaksi.forEach((t) => {
       t.detail_jawaban?.forEach((d) => {
         detailData.push({
-          'OPD/Instansi': t.profiles?.nama_instansi || 'N/A',
+          'Kelembagaan': t.kelembagaan?.nama || t.profiles?.nama_instansi || 'N/A',
           'Variabel': d.variabel_evaluasi?.nama_variabel || 'N/A',
           'Tingkat Capaian': d.tingkat_capaian,
           'Link Data Dukung': d.link_drive_dukung || '-',
@@ -115,7 +112,7 @@ export default function LaporanPage() {
       const level = getMaturityLevel(t.total_skor || 0);
       const rekom = getRekomendasi(level.level);
       return {
-        'OPD/Instansi': t.profiles?.nama_instansi || 'N/A',
+        'Kelembagaan': t.kelembagaan?.nama || t.profiles?.nama_instansi || 'N/A',
         'Level Saat Ini': `Level ${level.level} (${level.label})`,
         'Skor': t.total_skor,
         'Rekomendasi 1': rekom[0] || '',
@@ -218,7 +215,7 @@ export default function LaporanPage() {
             <div className="stats-grid" style={{ marginBottom: 0 }}>
               <div className="stat-card">
                 <div className="stat-value">{transaksi.length}</div>
-                <div className="stat-label">Total OPD Dievaluasi</div>
+                <div className="stat-label">Total Kelembagaan Dievaluasi</div>
               </div>
               <div className="stat-card">
                 <div className="stat-value">
@@ -240,14 +237,14 @@ export default function LaporanPage() {
           {/* Ranking Table */}
           <div className="card" style={{ marginBottom: 24 }}>
             <div className="card-header">
-              <div className="card-title">🏆 Ranking OPD</div>
+              <div className="card-title">🏆 Ranking Kelembagaan</div>
             </div>
             <div className="table-container">
               <table className="data-table">
                 <thead>
                   <tr>
                     <th>Ranking</th>
-                    <th>OPD/Instansi</th>
+                    <th>Kelembagaan</th>
                     <th>Skor</th>
                     <th>Level Kematangan</th>
                   </tr>
@@ -261,7 +258,7 @@ export default function LaporanPage() {
                           {i < 3 ? ['🥇', '🥈', '🥉'][i] : i + 1}
                         </td>
                         <td style={{ fontWeight: 600, color: 'var(--text-primary)' }}>
-                          {t.profiles?.nama_instansi || 'N/A'}
+                          {t.kelembagaan?.nama || t.profiles?.nama_instansi || 'N/A'}
                         </td>
                         <td style={{ fontWeight: 700, color: level.color }}>{formatScore(t.total_skor || 0)}</td>
                         <td>
@@ -293,7 +290,7 @@ export default function LaporanPage() {
                 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12, flexWrap: 'wrap', gap: 8 }}>
                     <h3 style={{ fontSize: 15, fontWeight: 600, color: 'var(--text-primary)' }}>
-                      {t.profiles?.nama_instansi || 'N/A'}
+                      {t.kelembagaan?.nama || t.profiles?.nama_instansi || 'N/A'}
                     </h3>
                     <span className={`badge badge-level-${level.level}`}>
                       Skor {formatScore(t.total_skor || 0)} — Level {level.level}

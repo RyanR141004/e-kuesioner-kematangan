@@ -7,7 +7,7 @@ import type { TransaksiEvaluasi } from '@/lib/types';
 import * as XLSX from 'xlsx';
 
 export default function RankingPage() {
-  const [data, setData] = useState<(TransaksiEvaluasi & { profiles: { nama_instansi: string; full_name: string } })[]>([]);
+  const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [filterYear, setFilterYear] = useState(new Date().getFullYear());
   const supabase = createClient();
@@ -20,7 +20,7 @@ export default function RankingPage() {
     setLoading(true);
     const { data } = await supabase
       .from('transaksi_evaluasi')
-      .select('*, profiles(nama_instansi, full_name)')
+      .select('*, profiles(nama_instansi, full_name), kelembagaan(nama)')
       .eq('periode_tahun', filterYear)
       .order('total_skor', { ascending: false });
     setData(data || []);
@@ -39,7 +39,7 @@ export default function RankingPage() {
       const level = getMaturityLevel(t.total_skor || 0);
       return {
         'Ranking': i + 1,
-        'OPD/Instansi': t.profiles?.nama_instansi || 'N/A',
+        'Kelembagaan': t.kelembagaan?.nama || t.profiles?.nama_instansi || 'N/A',
         'Periode': t.periode_tahun,
         'Total Skor': t.total_skor,
         'Level Kematangan': `Level ${level.level} (${level.label})`,
@@ -99,7 +99,7 @@ export default function RankingPage() {
               <thead>
                 <tr>
                   <th style={{ width: 80 }}>Ranking</th>
-                  <th>OPD / Instansi</th>
+                  <th>Kelembagaan</th>
                   <th>Skor</th>
                   <th>Level Kematangan</th>
                   <th>Progress</th>
@@ -129,7 +129,7 @@ export default function RankingPage() {
                           )}
                         </td>
                         <td style={{ fontWeight: 600, color: 'var(--text-primary)' }}>
-                          {t.profiles?.nama_instansi || 'N/A'}
+                          {t.kelembagaan?.nama || t.profiles?.nama_instansi || 'N/A'}
                         </td>
                         <td style={{ fontWeight: 700, fontSize: 18, color: level.color }}>
                           {formatScore(t.total_skor || 0)}

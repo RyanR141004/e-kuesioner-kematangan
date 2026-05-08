@@ -119,7 +119,7 @@ export const TINGKAT_OPTIONS = [
 ];
 
 /**
- * Daftar 26 Kelembagaan
+ * Daftar 29 Kelembagaan
  */
 export const DAFTAR_KELEMBAGAAN = [
   'Sekretariat Daerah',
@@ -148,4 +148,8 @@ export const DAFTAR_KELEMBAGAAN = [
   'Badan Kesatuan Bangsa dan Politik',
   'Dinas Sosial, Pemberdayaan Perempuan, Perlindungan Anak, Pengendalian Penduduk dan KB',
   'Kecamatan Blimbing',
+  'Kecamatan Lowokwaru',
+  'Bagian Organisasi',
+  'Bagian Hukum',
 ];
+

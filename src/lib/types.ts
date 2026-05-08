@@ -28,8 +28,8 @@ export interface Kelembagaan {
 export interface TransaksiEvaluasi {
   id: string;
   opd_id: string;
+  kelembagaan_id: string;
   periode_tahun: number;
-  jenis_evaluasi: string;
   tanggal_submit: string;
   total_skor: number;
   level_kematangan: string;
@@ -38,6 +38,7 @@ export interface TransaksiEvaluasi {
   updated_at: string;
   // Joined fields
   profiles?: Profile;
+  kelembagaan?: Kelembagaan;
   detail_jawaban?: DetailJawaban[];
 }
 
@@ -53,8 +54,8 @@ export interface DetailJawaban {
 }
 
 export interface KuesionerFormData {
+  kelembagaan_id: string;
   periode_tahun: number;
-  jenis_evaluasi: string;
   jawaban: {
     variabel_id: string;
     tingkat_capaian: number;

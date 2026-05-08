@@ -12,7 +12,7 @@ import {
 
 export default function DashboardPage() {
   const { profile } = useAuth();
-  const [transaksi, setTransaksi] = useState<(TransaksiEvaluasi & { profiles: { nama_instansi: string; full_name: string } })[]>([]);
+  const [transaksi, setTransaksi] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const supabase = createClient();
 
@@ -23,7 +23,7 @@ export default function DashboardPage() {
   const fetchData = async () => {
     const { data } = await supabase
       .from('transaksi_evaluasi')
-      .select('*, profiles(nama_instansi, full_name)')
+      .select('*, profiles(nama_instansi, full_name), kelembagaan(nama)')
       .order('total_skor', { ascending: false });
 
     setTransaksi(data || []);
@@ -40,7 +40,7 @@ export default function DashboardPage() {
 
   // Data for charts
   const barData = transaksi.slice(0, 10).map((t) => ({
-    name: t.profiles?.nama_instansi || 'N/A',
+    name: (t.kelembagaan?.nama || t.profiles?.nama_instansi || 'N/A').substring(0, 20),
     skor: t.total_skor || 0,
   }));
 
@@ -82,7 +82,7 @@ export default function DashboardPage() {
         <div className="stat-card">
           <div className="stat-icon green">🏛️</div>
           <div className="stat-value">{totalOPD}</div>
-          <div className="stat-label">OPD Terdaftar</div>
+          <div className="stat-label">Kelembagaan</div>
         </div>
         <div className="stat-card">
           <div className="stat-icon purple">📈</div>
@@ -102,7 +102,7 @@ export default function DashboardPage() {
           <div className="card-header">
             <div>
               <div className="card-title">Grafik Perbandingan Skor</div>
-              <div className="card-subtitle">Top 10 OPD berdasarkan skor</div>
+              <div className="card-subtitle">Top 10 Kelembagaan berdasarkan skor</div>
             </div>
           </div>
           <div className="chart-container">
@@ -192,7 +192,7 @@ export default function DashboardPage() {
             <thead>
               <tr>
                 <th>#</th>
-                <th>Instansi/OPD</th>
+                <th>Kelembagaan</th>
                 <th>Periode</th>
                 <th>Skor</th>
                 <th>Level Kematangan</th>
@@ -213,7 +213,7 @@ export default function DashboardPage() {
                     <tr key={t.id}>
                       <td>{i + 1}</td>
                       <td style={{ fontWeight: 600, color: 'var(--text-primary)' }}>
-                        {t.profiles?.nama_instansi || 'N/A'}
+                        {t.kelembagaan?.nama || t.profiles?.nama_instansi || 'N/A'}
                       </td>
                       <td>{t.periode_tahun}</td>
                       <td style={{ fontWeight: 700 }}>{formatScore(t.total_skor || 0)}</td>
