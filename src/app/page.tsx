@@ -1,83 +1,100 @@
+'use client';
+
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 
 export default function HomePage() {
   return (
-    <div style={{
-      minHeight: '100vh',
-      background: 'var(--bg-primary)',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      position: 'relative',
-      overflow: 'hidden',
-      padding: '20px',
-    }}>
-      {/* Background decorations */}
-      <div style={{
-        position: 'absolute', width: 700, height: 700,
-        background: 'radial-gradient(circle, rgba(59,130,246,0.08), transparent 70%)',
-        top: -300, right: -200,
-      }} />
-      <div style={{
-        position: 'absolute', width: 500, height: 500,
-        background: 'radial-gradient(circle, rgba(139,92,246,0.06), transparent 70%)',
-        bottom: -200, left: -100,
-      }} />
+    <div className="landing-page">
+      {/* Animated gradient background layers */}
+      <div className="landing-bg">
+        <div className="landing-orb orb-1" />
+        <div className="landing-orb orb-2" />
+        <div className="landing-orb orb-3" />
+        <div className="landing-grid-overlay" />
+      </div>
 
-      <div style={{ position: 'relative', zIndex: 1, textAlign: 'center', maxWidth: 700 }}>
+      <div style={{ position: 'relative', zIndex: 1, textAlign: 'center', maxWidth: 740, padding: '0 20px' }}>
         {/* Logo */}
-        <div style={{
-          width: 80, height: 80, margin: '0 auto 32px',
-          borderRadius: 20,
-          background: 'linear-gradient(135deg, #3b82f6, #8b5cf6)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: 36, fontWeight: 800, color: 'white',
-          boxShadow: '0 0 40px rgba(59,130,246,0.3)',
-        }}>
+        <motion.div
+          className="landing-logo"
+          initial={{ scale: 0, rotate: -180 }}
+          animate={{ scale: 1, rotate: 0 }}
+          transition={{ type: 'spring', stiffness: 200, damping: 20, delay: 0.2 }}
+        >
           EK
-        </div>
+        </motion.div>
 
-        <h1 style={{
-          fontSize: 'clamp(28px, 5vw, 48px)',
-          fontWeight: 800,
-          background: 'linear-gradient(135deg, #f1f5f9, #94a3b8)',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-          marginBottom: 16,
-          lineHeight: 1.2,
-        }}>
-          E-Kuesioner Evaluasi<br />Kematangan Perangkat Daerah
-        </h1>
+        <motion.h1
+          className="landing-title"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+        >
+          E-Kuesioner Evaluasi<br />
+          <span className="landing-title-accent">Kematangan Perangkat Daerah</span>
+        </motion.h1>
 
-        <p style={{
-          fontSize: 16, color: '#94a3b8', marginBottom: 40, lineHeight: 1.8,
-        }}>
+        <motion.p
+          className="landing-desc"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.6 }}
+        >
           Sistem evaluasi mandiri (self-assessment) tingkat kematangan 29 Perangkat Daerah
-          berdasarkan <strong style={{ color: '#f1f5f9' }}>Permendagri No 99 Tahun 2018</strong>
-        </p>
+          berdasarkan <strong style={{ color: '#e2e8f0' }}>Permendagri No 99 Tahun 2018</strong>
+        </motion.p>
 
-        <div style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
-          <Link href="/login" className="btn btn-primary btn-lg">
-            Masuk ke Sistem
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.8 }}
+          style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}
+        >
+          <Link href="/login" className="landing-cta">
+            <span>Masuk ke Sistem</span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
           </Link>
-        </div>
+        </motion.div>
 
         {/* Feature badges */}
-        <div style={{
-          display: 'flex', gap: 24, justifyContent: 'center', marginTop: 60,
-          flexWrap: 'wrap',
-        }}>
-          {['11 Instrumen Evaluasi', '29 Kelembagaan', 'Ranking Otomatis', 'Export PDF & Excel'].map((f) => (
-            <div key={f} style={{
-              padding: '8px 20px', borderRadius: 20,
-              background: 'rgba(59,130,246,0.1)', border: '1px solid rgba(59,130,246,0.2)',
-              fontSize: 13, fontWeight: 500, color: '#94a3b8',
-            }}>
-              {f}
-            </div>
+        <motion.div
+          className="landing-badges"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, delay: 1 }}
+        >
+          {[
+            { icon: '📋', label: '11 Instrumen' },
+            { icon: '🏛️', label: '29 Kelembagaan' },
+            { icon: '🏆', label: 'Ranking Otomatis' },
+            { icon: '📄', label: 'Export PDF & Excel' },
+          ].map((f, i) => (
+            <motion.div
+              key={f.label}
+              className="landing-badge"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.1 + i * 0.1 }}
+              whileHover={{ scale: 1.05, y: -2 }}
+            >
+              <span className="badge-icon">{f.icon}</span>
+              <span>{f.label}</span>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
+
+        {/* Bottom note */}
+        <motion.p
+          className="landing-note"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.5 }}
+        >
+          Pemerintah Kota Malang
+        </motion.p>
       </div>
     </div>
   );
