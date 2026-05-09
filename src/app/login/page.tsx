@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
 import { DAFTAR_KELEMBAGAAN } from '@/lib/utils';
@@ -19,8 +19,24 @@ export default function LoginPage() {
   const [isEmailFocused, setIsEmailFocused] = useState(false);
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const containerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const supabase = createClient();
+
+  // Mouse tracking
+  const handleMouseMove = useCallback((e: MouseEvent) => {
+    if (!containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 2 - 1; // -1 to 1
+    const y = ((e.clientY - rect.top) / rect.height) * 2 - 1; // -1 to 1
+    setMousePos({ x: Math.max(-1, Math.min(1, x)), y: Math.max(-1, Math.min(1, y)) });
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, [handleMouseMove]);
 
   let typingTimeout: any;
   const handleEmailChange = (val: string) => {
@@ -96,7 +112,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="login-page-v2">
+    <div className="login-page-v2" ref={containerRef}>
       {/* Animated background */}
       <div className="login-bg-shapes">
         <div className="bg-shape shape-1" />
@@ -118,6 +134,8 @@ export default function LoginPage() {
             isPasswordFocused={isPasswordFocused}
             isTyping={isTyping}
             emailLength={email.length}
+            mouseX={mousePos.x}
+            mouseY={mousePos.y}
           />
           <motion.p
             className="mascot-tagline"
