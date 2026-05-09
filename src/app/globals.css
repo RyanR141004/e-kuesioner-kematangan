@@ -336,8 +336,7 @@ body {
 .page-header { margin-bottom: 32px; position: relative; }
 .page-title {
   font-size: 28px; font-weight: 800;
-  background: linear-gradient(135deg, #f1f5f9 0%, #94a3b8 100%);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  color: var(--text-primary);
 }
 .page-subtitle { font-size: 14px; color: var(--text-muted); margin-top: 6px; letter-spacing: 0.2px; }
 
