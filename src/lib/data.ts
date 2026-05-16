@@ -1,10 +1,10 @@
 /**
  * Data Master E-Kuesioner Kematangan Perangkat Daerah
  * Berdasarkan Permendagri No 99 Tahun 2018
- * 
- * File ini berisi:
- * 1. Daftar 29 Kelembagaan
- * 2. 11 Instrumen Pertanyaan beserta kriteria level 1-5 dan syarat data dukung
+ *
+ * SINGLE SOURCE OF TRUTH untuk merender kuesioner.
+ * Berisi 29 Kelembagaan + 11 Instrumen Pertanyaan lengkap
+ * dengan link_drive_master, kriteria level 1-5, dan panduan data dukung.
  */
 
 // =========================================================
@@ -47,12 +47,14 @@ export const DAFTAR_KELEMBAGAAN = [
 // =========================================================
 export interface KriteriaLevel {
   deskripsi: string;
-  syarat_data_dukung: string;
+  butuh_bukti: boolean;
+  panduan?: string;
 }
 
 export interface InstrumenPertanyaan {
   id: number;
   soal: string;
+  link_drive_master: string;
   kriteria: {
     "1": KriteriaLevel;
     "2": KriteriaLevel;
@@ -64,293 +66,138 @@ export interface InstrumenPertanyaan {
 
 // =========================================================
 // 11 INSTRUMEN PERTANYAAN
-// Lengkap dengan kriteria Level 1-5 dan syarat data dukung
 // =========================================================
 export const INSTRUMEN_PERTANYAAN: InstrumenPertanyaan[] = [
   {
     id: 1,
-    soal: "Bagaimana cara penentuan kegiatan yang diprioritaskan dalam perencanaan tahunan?",
+    soal: "1. Bagaimana cara penentuan kegiatan yang diprioritaskan dalam perencanaan tahunan?",
+    link_drive_master: "https://drive.google.com/drive/folders/1zBT-bbXPy14tW7NHKI-w4j-DTlLAWL7N?usp=sharing",
     kriteria: {
-      "1": {
-        deskripsi: "Penentuan kegiatan diprioritaskan tanpa ada kriteria yang terukur.",
-        syarat_data_dukung: "Tidak ada data dukung",
-      },
-      "2": {
-        deskripsi: "Penentuan berdasarkan analisis terhadap hasil (outcome) yang akan dicapai.",
-        syarat_data_dukung: "1. Berita Acara Pelaksanaan Forum OPD 2024\n2. Berita Acara Verifikasi rancangan Renja 2025",
-      },
-      "3": {
-        deskripsi: "Penentuan berdasarkan analisis hasil dan kemampuan menghasilkan outcome.",
-        syarat_data_dukung: "1. BA Pelaksanaan Forum OPD 2025\n2. BA Verifikasi Renja 2025\n3. Rancangan awal & akhir Renja 2025\n4. RKA murni & perubahan 2024\n5. Cascading 2025\n6. KAK / TOR kegiatan",
-      },
-      "4": {
-        deskripsi: "Penentuan berdasarkan analisis komprehensif termasuk benchmarking dan evaluasi kinerja tahun sebelumnya.",
-        syarat_data_dukung: "1. Dokumen pada Level 3\n2. Laporan Evaluasi Kinerja tahun sebelumnya\n3. Hasil benchmarking dengan daerah lain\n4. Dokumen review dan revisi prioritas",
-      },
-      "5": {
-        deskripsi: "Penentuan terintegrasi dengan sistem perencanaan nasional, berbasis data real-time, dan dilakukan inovasi berkelanjutan.",
-        syarat_data_dukung: "1. Dokumen pada Level 4\n2. Bukti integrasi dengan e-Planning nasional\n3. Dashboard monitoring real-time\n4. Laporan inovasi perencanaan\n5. Bukti kolaborasi lintas OPD",
-      },
+      "1": { deskripsi: "Penentuan kegiatan diprioritaskan dalam dokumen perencanaan tahunan (Renja/RKPD) dilakukan tanpa ada kriteria yang terukur.", butuh_bukti: false },
+      "2": { deskripsi: "Penentuan kegiatan yang diprioritaskan berdasarkan analisis terhadap hasil (outcome) apa yang akan dicapai kegiatan tersebut.", butuh_bukti: true, panduan: "Berita Acara Pelaksanaan Forum OPD 2024, Berita Acara Verifikasi rancangan Renja 2025" },
+      "3": { deskripsi: "Penentuan prioritas kegiatan dilakukan berdasarkan analisis hasil (outcome) dan analisis kemampuan kegiatan menghasilkan hasil (outcome).", butuh_bukti: true, panduan: "Berita Acara Pelaksanaan Forum OPD 2025, Berita Acara Verifikasi Renja 2025, Rancangan awal & akhir renja 2025 OPD, RKA murni & perubahan 2024, Cascading 2025, KAK / TOR kegiatan" },
+      "4": { deskripsi: "Penentuan prioritas kegiatan dilakukan berdasarkan analisis yang membandingkan hasil (outcome) yang akan dicapai antara satu alternatif kegiatan dengan alternatif kegiatan yang lain.", butuh_bukti: true, panduan: "BA Forum OPD 2025, BA Verifikasi Renja 2025, Rancangan awal/akhir Renja 2025, RKA murni/perubahan 2024, Cascading 2024, KAK/TOR, Rencana aksi kegiatan 2025" },
+      "5": { deskripsi: "Penentuan prioritas kegiatan dalam dokumen tahunan dilakukan dengan perbandingan hasil (outcome) antara satu alternatif kegiatan dengan alternatif kegiatan yang lain dan dibantu dengan teknologi informasi.", butuh_bukti: true, panduan: "BA Forum OPD 2025, BA Verifikasi Renja 2025, Rancangan awal/akhir Renja 2025, RKA murni/perubahan 2024, Cascading 2023, KAK/TOR, Rencana aksi kegiatan 2025, Screenshot e-planning & e-budgeting" },
     },
   },
   {
     id: 2,
-    soal: "Bagaimana proses penganggaran kegiatan dilakukan di organisasi?",
+    soal: "2. Bagaimana metode pengendalian program kegiatan dilakukan di perangkat daerah?",
+    link_drive_master: "https://drive.google.com/drive/folders/1SqyrgktMRziL9fSUCveR10vZdQQPIHue?usp=sharing",
     kriteria: {
-      "1": {
-        deskripsi: "Proses penganggaran dilakukan tanpa mengacu pada standar biaya atau analisis kebutuhan.",
-        syarat_data_dukung: "Tidak ada data dukung",
-      },
-      "2": {
-        deskripsi: "Penganggaran sudah mengacu pada standar biaya dan Rencana Kerja Anggaran (RKA) disusun sesuai prosedur.",
-        syarat_data_dukung: "1. RKA Murni Tahun Berjalan\n2. Standar Satuan Harga (SSH) yang digunakan",
-      },
-      "3": {
-        deskripsi: "Penganggaran mengacu pada standar biaya, berbasis kinerja, dan telah terdokumentasi dengan baik.",
-        syarat_data_dukung: "1. RKA Murni & Perubahan\n2. SSH & Standar Biaya Umum (SBU)\n3. Dokumen KAK/TOR seluruh kegiatan\n4. Analisis Standar Belanja (ASB)\n5. Cascading anggaran ke program",
-      },
-      "4": {
-        deskripsi: "Penganggaran berbasis kinerja yang terukur dengan monitoring berkala dan evaluasi efisiensi anggaran.",
-        syarat_data_dukung: "1. Dokumen pada Level 3\n2. Laporan monitoring penyerapan anggaran triwulan\n3. Hasil evaluasi efisiensi & efektivitas anggaran\n4. Dokumen reviu/audit internal anggaran",
-      },
-      "5": {
-        deskripsi: "Penganggaran sudah terintegrasi digital, berbasis data analytics, dengan otomatisasi pelaporan dan inovasi berkelanjutan.",
-        syarat_data_dukung: "1. Dokumen pada Level 4\n2. Bukti penggunaan e-Budgeting terintegrasi\n3. Dashboard analytics anggaran real-time\n4. Laporan inovasi efisiensi anggaran\n5. Sertifikat/penghargaan terkait penganggaran",
-      },
+      "1": { deskripsi: "Monitoring dan pengendalian dilakukan dengan cara sederhana dan tidak terstruktur.", butuh_bukti: false },
+      "2": { deskripsi: "Monitoring dan pengendalian dilakukan secara berkala dengan fokus yang ditentukan.", butuh_bukti: true, panduan: "Rapat internal / rapat staf tentang monev pelaksanaan program kegiatan (undangan dan notulen rapat)" },
+      "3": { deskripsi: "Monitoring dan pengendalian dilakukan secara berkala dengan kriteria penyimpangan yang terstandarisasi pada setiap kegiatan.", butuh_bukti: true, panduan: "Rapat internal/staf monev, Jadwal monev berkala program kegiatan (triwulanan)" },
+      "4": { deskripsi: "Monitoring dan pengendalian dilakukan secara berkala dengan kriteria penyimpangan yang terstandarisasi dan diikuti dengan umpan balik berupa perbaikan yang terdokumentasi dengan baik.", butuh_bukti: true, panduan: "Rapat internal monev, Jadwal monev, Laporan fisik keuangan triwulanan ke BKAD, Laporan RKPD triwulanan ke Bappeda, Bahan rapat pengendalian/PPT paparan realisasi" },
+      "5": { deskripsi: "Monitoring dan pengendalian dilakukan secara sistematis, terstandarisasi termasuk umpan balik yang didukung oleh penggunaan teknologi informasi berbasis internet.", butuh_bukti: true, panduan: "Rapat internal monev, Jadwal monev triwulanan, Laporan fisik keuangan ke BKAD, Laporan RKPD ke Bappeda, Bahan rapat pengendalian, Aplikasi monitoring berbasis internet" },
     },
   },
   {
     id: 3,
-    soal: "Bagaimana mekanisme pelaksanaan tugas dan fungsi sehari-hari?",
+    soal: "3. Bagaimana proses penjaminan mutu dilakukan di perangkat daerah?",
+    link_drive_master: "https://drive.google.com/drive/folders/1EqlQzuuYLnoFPYeKccJ46juJooOAvI5F?usp=sharing",
     kriteria: {
-      "1": {
-        deskripsi: "Pelaksanaan tugas dan fungsi berjalan tanpa ada SOP atau pedoman kerja yang jelas.",
-        syarat_data_dukung: "Tidak ada data dukung",
-      },
-      "2": {
-        deskripsi: "Pelaksanaan tugas sudah berdasarkan uraian tugas (job description) namun belum ada SOP formal.",
-        syarat_data_dukung: "1. Dokumen uraian tugas/jabatan pegawai\n2. SK Pembagian Tugas",
-      },
-      "3": {
-        deskripsi: "Pelaksanaan tugas sudah berdasarkan SOP yang terdokumentasi dan diterapkan secara konsisten.",
-        syarat_data_dukung: "1. Dokumen SOP seluruh layanan/proses utama\n2. SK Penetapan SOP\n3. Bukti sosialisasi SOP kepada seluruh pegawai\n4. Dokumen Standar Pelayanan (SP)\n5. Laporan implementasi SOP",
-      },
-      "4": {
-        deskripsi: "Pelaksanaan tugas terstandar, dimonitor pelaksanaannya, dan dievaluasi secara berkala.",
-        syarat_data_dukung: "1. Dokumen pada Level 3\n2. Laporan monitoring pelaksanaan SOP\n3. Hasil evaluasi dan revisi SOP berkala\n4. Dokumen perbaikan berkelanjutan (continuous improvement)",
-      },
-      "5": {
-        deskripsi: "Pelaksanaan tugas sudah terotomasi dengan sistem digital, berbasis data, dan terus berinovasi.",
-        syarat_data_dukung: "1. Dokumen pada Level 4\n2. Bukti digitalisasi proses kerja/e-Office\n3. Dashboard monitoring kinerja pegawai real-time\n4. Laporan inovasi pelayanan\n5. Bukti penghargaan/sertifikasi terkait",
-      },
+      "1": { deskripsi: "Tidak ada penjaminan mutu atas produk yang dihasilkan dan atas proses kerja yang dilakukan.", butuh_bukti: false },
+      "2": { deskripsi: "Penjaminan mutu produk dan proses kerja dilakukan secara berkala namun tidak mempunyai standar mutu produk dan proses yang ditetapkan.", butuh_bukti: true, panduan: "Proses pelayanan dengan jenjang verifikasi (contoh surat / nota dinas yang menunjukkan adanya paraf pejabat struktural)" },
+      "3": { deskripsi: "Mutu produk dan proses sudah distandarisasi dan dilakukan pengujian secara berkala secara internal.", butuh_bukti: true, panduan: "Contoh surat/nota dinas dengan paraf struktural, Dokumen Standar Pelayanan, SK Tim Mutu / SK Tim Monev Standar Pelayanan, Berita Acara Monev Standar Pelayanan" },
+      "4": { deskripsi: "Penjaminan mutu produk dan proses sudah distandarisasi serta dilakukan pengukuran/ pengujian secara berkala oleh tenaga yang bersertifikat.", butuh_bukti: true, panduan: "Contoh surat/nota dinas paraf struktural, Dokumen Standar Pelayanan, SK Tim Mutu, Berita Acara Monev, Dokumen Sistem Manajemen Mutu/Akreditasi/ISO, SK/Surat Tugas keterlibatan tenaga ahli eksternal" },
+      "5": { deskripsi: "Penjaminan mutu produk dan proses dilakukan terstandarisasi dan berkala oleh tenaga ahli bersertifikat serta didukung oleh teknologi informasi berbasis internet.", butuh_bukti: true, panduan: "Dokumen Standar Pelayanan, SK Tim Mutu, Berita Acara Monev, Dokumen ISO, SK Tenaga Ahli, Website Perangkat Daerah yang memuat tentang SP dan sertifikat/piagam penjaminan mutu/ISO" },
     },
   },
   {
     id: 4,
-    soal: "Bagaimana mekanisme penataan organisasi dan tata laksana?",
+    soal: "4. Sejauh mana pengelolaan SOP di perangkat daerah anda?",
+    link_drive_master: "https://drive.google.com/drive/folders/1lquyRnkB6YRtbLZaYElv9iys504UNZmd?usp=sharing",
     kriteria: {
-      "1": {
-        deskripsi: "Struktur organisasi belum sesuai dengan beban kerja dan belum ada analisis jabatan.",
-        syarat_data_dukung: "Tidak ada data dukung",
-      },
-      "2": {
-        deskripsi: "Sudah ada struktur organisasi yang ditetapkan dan analisis jabatan sudah mulai dilakukan.",
-        syarat_data_dukung: "1. Peraturan tentang Struktur Organisasi (SOTK)\n2. Dokumen awal Analisis Jabatan (Anjab)",
-      },
-      "3": {
-        deskripsi: "Penataan organisasi berdasarkan analisis jabatan dan analisis beban kerja yang komprehensif.",
-        syarat_data_dukung: "1. Dokumen Anjab lengkap seluruh jabatan\n2. Dokumen Analisis Beban Kerja (ABK)\n3. Peta Jabatan yang telah ditetapkan\n4. SK Penetapan Struktur Organisasi\n5. Evaluasi kelembagaan",
-      },
-      "4": {
-        deskripsi: "Organisasi sudah adaptif, hasil evaluasi berkala ditindaklanjuti, dan tata kelola berjalan efektif.",
-        syarat_data_dukung: "1. Dokumen pada Level 3\n2. Laporan evaluasi kelembagaan berkala\n3. Dokumen penyesuaian struktur berdasarkan evaluasi\n4. Hasil survey kepuasan internal",
-      },
-      "5": {
-        deskripsi: "Organisasi agile, berbasis digital, dengan tata kelola yang terus berinovasi dan responsif terhadap perubahan.",
-        syarat_data_dukung: "1. Dokumen pada Level 4\n2. Bukti implementasi e-Government/SPBE\n3. Dokumen transformasi digital organisasi\n4. Laporan inovasi tata kelola\n5. Penghargaan/pengakuan terkait",
-      },
+      "1": { deskripsi: "Tidak ada definisi resmi proses pelaksanaan pekerjaan pada perangkat daerah.", butuh_bukti: false },
+      "2": { deskripsi: "Definisi proses organisasi sudah dituangkan dalam standar operasi prosedur (SOP).", butuh_bukti: true, panduan: "SK Tim Penyusun SOP Perangkat Daerah terbaru, Dokumen SOP Perangkat Daerah terbaru" },
+      "3": { deskripsi: "Definisi proses organisasi sudah dituangkan ke dalam SOP dan telah dilakukan evaluasi berkala terhadap penerapan SOP.", butuh_bukti: true, panduan: "SK Tim Penyusun SOP terbaru, Dokumen SOP terbaru, Berita Acara Monev SOP terbaru" },
+      "4": { deskripsi: "Definisi proses organisasi sudah dituangkan dalam SOP, sudah dievaluasi secara berkala dan dilakukan tindak lanjut terhadap hasil evaluasi penerapan SOP berupa tindakan koreksi atau perbaikan SOP.", butuh_bukti: true, panduan: "SK Tim Penyusun SOP, Dokumen SOP, Berita Acara Monev SOP, SK tentang Perubahan SOP, Dokumen SOP terbaru pasca perubahan" },
+      "5": { deskripsi: "Definisi proses organisasi sudah dituangkan dalam SOP dan sudah dilakukan evaluasi serta tindak lanjut, kemudian disesuaikan dengan kebutuhan/keluhan pelanggan serta didukung oleh teknologi berbasis internet.", butuh_bukti: true, panduan: "SK Tim Penyusun SOP, Dokumen SOP, Berita Acara Monev, SK Perubahan SOP, Dokumen SOP pasca perubahan, Website Perangkat Daerah yang menampilkan informasi SOP" },
     },
   },
   {
     id: 5,
-    soal: "Bagaimana sistem manajemen SDM aparatur diterapkan?",
+    soal: "5. Bagaimana rencana pengembangan kompetensi pegawai di perangkat daerah anda?",
+    link_drive_master: "https://drive.google.com/drive/folders/1T9fimaeggxgKA5q_Mj2BCwsf5kQPFEoo?usp=sharing",
     kriteria: {
-      "1": {
-        deskripsi: "Manajemen SDM belum terencana dan masih bersifat reaktif tanpa basis data kepegawaian.",
-        syarat_data_dukung: "Tidak ada data dukung",
-      },
-      "2": {
-        deskripsi: "Sudah ada perencanaan SDM dasar dan database kepegawaian mulai dikelola.",
-        syarat_data_dukung: "1. Dokumen Bezetting Pegawai\n2. Data kepegawaian dasar (database/spreadsheet)",
-      },
-      "3": {
-        deskripsi: "Manajemen SDM berbasis kompetensi, ada perencanaan kebutuhan, dan pengembangan karier terstruktur.",
-        syarat_data_dukung: "1. Dokumen perencanaan kebutuhan ASN\n2. Standar kompetensi jabatan\n3. Rencana pengembangan karier pegawai\n4. Laporan Diklat/Bimtek pegawai\n5. Data SIMPEG yang terupdate",
-      },
-      "4": {
-        deskripsi: "Manajemen SDM terukur, berbasis kinerja individu, dengan talent management dan succession planning.",
-        syarat_data_dukung: "1. Dokumen pada Level 3\n2. Laporan SKP dan penilaian kinerja individu\n3. Dokumen talent pool dan succession planning\n4. Evaluasi efektivitas program pengembangan SDM",
-      },
-      "5": {
-        deskripsi: "Manajemen SDM sudah terintegrasi digital, prediktif, dengan budaya kerja inovatif dan kolaboratif.",
-        syarat_data_dukung: "1. Dokumen pada Level 4\n2. Bukti HRIS/e-Kinerja terintegrasi\n3. Dashboard analytics SDM\n4. Laporan budaya kerja dan engagement\n5. Penghargaan/sertifikasi SDM",
-      },
+      "1": { deskripsi: "Belum ada dokumen resmi rencana kebutuhan pendidikan dan pelatihan pada perangkat daerah yang bersangkutan.", butuh_bukti: false },
+      "2": { deskripsi: "Dokumen rencana kebutuhan pengembangan pegawai sudah tersusun secara parsial untuk jabatan tertentu.", butuh_bukti: true, panduan: "Surat Usulan Pengembangan Kompetensi dari Kepala Perangkat Daerah ke Kepala BKPSDM tahun terbaru" },
+      "3": { deskripsi: "Dokumen rencana kebutuhan pengembangan pegawai disusun untuk seluruh jabatan.", butuh_bukti: true, panduan: "Surat Usulan Pengembangan Kompetensi ke BKPSDM, Lampiran Surat Usulan, Rekap Kebutuhan Diklat per Jabatan" },
+      "4": { deskripsi: "Rencana pengembangan pegawai dievaluasi secara regular dan seluruh pengembangan pegawai sudah dilaksanakan sesuai dengan dokumen rencana pengembangan pegawai yang sudah ditetapkan.", butuh_bukti: true, panduan: "Surat Usulan Pengembangan Kompetensi, Lampiran Surat Usulan, Rekap Kebutuhan Diklat per Jabatan, Dokumen rencana pengembangan pegawai resmi" },
+      "5": { deskripsi: "Hasil (outcome) pengembangan pegawai dievaluasi secara regular sebagai umpan balik.", butuh_bukti: true, panduan: "Surat Usulan Pengembangan Kompetensi beserta Lampiran, Rekap Kebutuhan Diklat, Dokumen rencana pengembangan, Undangan + Daftar Hadir + Notulen rapat evaluasi pelaksanaan diklat" },
     },
   },
   {
     id: 6,
-    soal: "Bagaimana sistem pengelolaan keuangan dan aset daerah?",
+    soal: "6. Bagaimana proses analisis kebijakan di perangkat daerah Anda?",
+    link_drive_master: "https://drive.google.com/drive/folders/1rlnPKFG_bwR_pQ4HMkVAdbNnjMO1d3OB?usp=sharing",
     kriteria: {
-      "1": {
-        deskripsi: "Pengelolaan keuangan belum teratur dan belum sesuai standar akuntansi pemerintahan.",
-        syarat_data_dukung: "Tidak ada data dukung",
-      },
-      "2": {
-        deskripsi: "Pengelolaan keuangan sudah mengacu pada regulasi dan ada pelaporan keuangan periodik.",
-        syarat_data_dukung: "1. Laporan Keuangan Semester/Tahunan\n2. Bukti penggunaan SIMDA/SIPD Keuangan",
-      },
-      "3": {
-        deskripsi: "Pengelolaan keuangan transparan, akuntabel, dengan pengendalian internal yang memadai.",
-        syarat_data_dukung: "1. Laporan Keuangan OPD yang teraudit\n2. Laporan Aset/BMD yang terupdate\n3. SOP Pengelolaan Keuangan\n4. Dokumen Sistem Pengendalian Internal (SPI)\n5. Bukti rekonsiliasi aset berkala",
-      },
-      "4": {
-        deskripsi: "Pengelolaan keuangan berbasis kinerja, efisien, dan hasil audit menunjukkan opini WTP.",
-        syarat_data_dukung: "1. Dokumen pada Level 3\n2. Bukti opini WTP/WDP dari BPK\n3. Laporan tindak lanjut temuan audit\n4. Analisis efisiensi belanja",
-      },
-      "5": {
-        deskripsi: "Pengelolaan keuangan terintegrasi digital, berbasis data analytics, dan menjadi best practice.",
-        syarat_data_dukung: "1. Dokumen pada Level 4\n2. Bukti e-Budgeting & e-Procurement terintegrasi\n3. Dashboard keuangan real-time\n4. Laporan inovasi pengelolaan keuangan\n5. Penghargaan terkait pengelolaan keuangan",
-      },
+      "1": { deskripsi: "Analisis kebijakan dan pemecahan masalah dilakukan secara sederhana dan dengan metode yang tidak terukur.", butuh_bukti: false },
+      "2": { deskripsi: "Analisis kebijakan yang berdampak ke publik dilakukan oleh tim internal perangkat daerah yang bersangkutan.", butuh_bukti: true, panduan: "SK Tim Analisis / Tim Kebijakan / Tim Pelaksana Kegiatan Perangkat Daerah terbaru" },
+      "3": { deskripsi: "Analisis kebijakan dan pemecahan masalah yang berdampak ke publik dilakukan menggunakan metode/teknik ilmiah oleh tim internal dengan melibatkan instansi pemerintah terkait.", butuh_bukti: true, panduan: "SK Tim Analisis/Kebijakan Perangkat Daerah, Undangan rapat Tim Analisis, Notulen rapat Tim" },
+      "4": { deskripsi: "Analisis kebijakan dan pemecahan masalah yang bersifat strategis/berdampak ke publik melibatkan tim ahli.", butuh_bukti: true, panduan: "SK Tim Analisis/Kebijakan, Undangan rapat Tim, Notulen rapat Tim, SK atau surat tugas yang menunjukkan keterlibatan narasumber dari pihak eksternal / ahli" },
+      "5": { deskripsi: "Analisis kebijakan dan pemecahan masalah strategis/berdampak ke publik melibatkan tim ahli dengan melakukan konsultasi publik dan analisis umpan balik yang terukur dan terdokumentasi.", butuh_bukti: true, panduan: "SK Tim Analisis, Undangan & Notulen rapat Tim, SK keterlibatan narasumber eksternal, Undangan public hearing, Notulen kegiatan public hearing" },
     },
   },
   {
     id: 7,
-    soal: "Bagaimana mekanisme pengawasan dan pengendalian internal?",
+    soal: "7. Bagaimana pengelolaan sumber daya dalam pelaksanaan proyek di perangkat daerah anda?",
+    link_drive_master: "https://drive.google.com/drive/folders/1b7XGQhyS9t_vBNQlHZpfnJPnh9ceIc95?usp=sharing",
     kriteria: {
-      "1": {
-        deskripsi: "Pengawasan dilakukan secara informal tanpa ada sistem pengendalian internal yang jelas.",
-        syarat_data_dukung: "Tidak ada data dukung",
-      },
-      "2": {
-        deskripsi: "Sudah ada unit pengawasan dan mekanisme pengendalian dasar sudah terbentuk.",
-        syarat_data_dukung: "1. SK Tim/Unit Pengawasan Internal\n2. Rencana kerja pengawasan tahunan",
-      },
-      "3": {
-        deskripsi: "Sistem Pengendalian Internal Pemerintah (SPIP) sudah diterapkan secara formal dan terdokumentasi.",
-        syarat_data_dukung: "1. SK Penyelenggaraan SPIP\n2. Peta Risiko dan Register Risiko\n3. Laporan Penyelenggaraan SPIP\n4. Laporan hasil audit internal\n5. Rencana tindak pengendalian",
-      },
-      "4": {
-        deskripsi: "SPIP berjalan efektif, temuan audit ditindaklanjuti, dan ada evaluasi maturitas SPIP secara berkala.",
-        syarat_data_dukung: "1. Dokumen pada Level 3\n2. Laporan evaluasi maturitas SPIP\n3. Bukti tindak lanjut seluruh temuan\n4. Laporan monitoring efektivitas pengendalian",
-      },
-      "5": {
-        deskripsi: "Pengawasan berbasis teknologi, prediktif, dan menjadi budaya organisasi dengan zero tolerance fraud.",
-        syarat_data_dukung: "1. Dokumen pada Level 4\n2. Bukti e-Audit/sistem pengawasan digital\n3. Whistleblowing system yang aktif\n4. Laporan integritas dan anti-korupsi\n5. Sertifikasi/penghargaan terkait",
-      },
+      "1": { deskripsi: "Penggunaan sumber daya dilakukan hanya berdasarkan ketentuan formal yang berlaku.", butuh_bukti: false },
+      "2": { deskripsi: "Penentuan penggunaan input proyek dilakukan berdasarkan analisis kebutuhan bahan/ sumber daya yang sudah ditetapkan.", butuh_bukti: true, panduan: "Perwal tentang Standar Harga Satuan Tahun Anggaran terbaru" },
+      "3": { deskripsi: "Analisis kebutuhan input/sumber daya proyek sudah distandarisasi dengan proses ujicoba secara terbuka dan menggunakan metode ilmiah.", butuh_bukti: true, panduan: "Perwal tentang Standar Harga Satuan, Salah satu contoh RKA kegiatan Tahun berkenaan" },
+      "4": { deskripsi: "Penyediaan sumber daya dalam pelaksanaan proyek dimonitor secara ketat berdasarkan standar input sumber daya, SOP dan prosedur penjaminan mutu produk.", butuh_bukti: true, panduan: "Perwal Standar Harga Satuan, Contoh RKA kegiatan, Usulan data kebutuhan pegawai dan bezeting ke Kepala BKPSDM" },
+      "5": { deskripsi: "Penyediaan sumber daya dan pelaksanaan proyek dimonitor secara ketat berdasarkan SOP dan prosedur penjaminan mutu produk dan didukung oleh teknologi informasi berbasis internet.", butuh_bukti: true, panduan: "Perwal Standar Harga Satuan, Contoh RKA, Usulan kebutuhan pegawai/bezeting & peta jabatan terbaru ke BKPSDM, Screenshot e-budgeting, e-formasi, e-procurement" },
     },
   },
   {
     id: 8,
-    soal: "Bagaimana pelaksanaan pelayanan publik di organisasi?",
+    soal: "8. Bagaimana pengelolaan risiko dalam tugas perangkat daerah Anda?",
+    link_drive_master: "https://drive.google.com/drive/folders/1D08sAaS31MVTStR8p6OMRB2rgxTTAcKY?usp=sharing",
     kriteria: {
-      "1": {
-        deskripsi: "Pelayanan publik belum terstandar dan belum ada mekanisme pengaduan masyarakat.",
-        syarat_data_dukung: "Tidak ada data dukung",
-      },
-      "2": {
-        deskripsi: "Sudah ada standar pelayanan dasar dan mulai tersedia saluran pengaduan.",
-        syarat_data_dukung: "1. Dokumen Standar Pelayanan (SP)\n2. Bukti ketersediaan saluran pengaduan",
-      },
-      "3": {
-        deskripsi: "Pelayanan publik terstandar, transparan, dan sudah ada Survey Kepuasan Masyarakat (SKM).",
-        syarat_data_dukung: "1. SK Penetapan Standar Pelayanan\n2. Maklumat Pelayanan\n3. Laporan Survey Kepuasan Masyarakat (SKM)\n4. SOP seluruh jenis layanan\n5. Bukti pengelolaan pengaduan/feedback",
-      },
-      "4": {
-        deskripsi: "Pelayanan responsif, inovatif, dan hasil SKM menunjukkan indeks kepuasan tinggi.",
-        syarat_data_dukung: "1. Dokumen pada Level 3\n2. Laporan SKM dengan indeks ≥ 80/Baik\n3. Dokumentasi inovasi pelayanan\n4. Bukti tindak lanjut hasil SKM",
-      },
-      "5": {
-        deskripsi: "Pelayanan berbasis digital (e-Service), terintegrasi, dan menjadi role model pelayanan prima.",
-        syarat_data_dukung: "1. Dokumen pada Level 4\n2. Bukti layanan online/e-Service terintegrasi\n3. Dashboard pelayanan real-time\n4. Penghargaan pelayanan publik\n5. Bukti replikasi oleh OPD lain",
-      },
+      "1": { deskripsi: "Belum ada manajemen resiko dalam pelaksanaan tugas pada perangkat daerah.", butuh_bukti: false },
+      "2": { deskripsi: "Sudah ada sebagian pegawai yang melakukan analisis resiko dalam pelaksanaan tugasnya, namun hanya bersifat individu.", butuh_bukti: true, panduan: "SK Satgas RTP Perangkat Daerah, Tabel risiko internal (tanpa dokumen laporan lengkap)" },
+      "3": { deskripsi: "Perangkat daerah sudah menetapkan prosedur pengelolaan resiko dalam pelaksanaan tugas tertentu yang dipandang mempunyai resiko tinggi.", butuh_bukti: true, panduan: "SK Satgas RTP Perangkat Daerah, Dokumen / Laporan RTP (Rencana Tindak Pengendalian) Perangkat Daerah" },
+      "4": { deskripsi: "Perangkat daerah sudah menetapkan prosedur pengelolaan resiko untuk seluruh tugas pada perangkat daerah yang bersangkutan, namun belum dilakukan evaluasi secara berkala.", butuh_bukti: true, panduan: "SK Satgas RTP Perangkat Daerah, Dokumen / Laporan RTP Perangkat Daerah, Bukti rapat monev RTP (undangan dan notulen rapat)" },
+      "5": { deskripsi: "Perangkat Daerah sudah menetapkan prosedur pengelolaan resiko dalam pelaksanaan tugas serta semua resiko dapat dikendalikan tanpa ada kerugian baik bagi pegawai maupun instansi.", butuh_bukti: true, panduan: "SK Satgas RTP, Dokumen/Laporan RTP Perangkat Daerah, Rapat monev RTP (undangan & notulen), SK tentang Satgas SPIP (Sistem Pengendalian Intern Pemerintah) Perangkat Daerah" },
     },
   },
   {
     id: 9,
-    soal: "Bagaimana penerapan sistem informasi dan teknologi dalam mendukung kinerja organisasi?",
+    soal: "9. Bagaimana pengukuran kinerja di perangkat daerah Anda?",
+    link_drive_master: "https://drive.google.com/drive/folders/1rBJbdvII807-Fs9cvo71DOYOi4mC1Kbf?usp=sharing",
     kriteria: {
-      "1": {
-        deskripsi: "Penggunaan teknologi informasi masih sangat minim dan belum ada rencana pengembangan TI.",
-        syarat_data_dukung: "Tidak ada data dukung",
-      },
-      "2": {
-        deskripsi: "Sudah ada infrastruktur TI dasar dan beberapa aplikasi sudah digunakan secara parsial.",
-        syarat_data_dukung: "1. Daftar inventaris infrastruktur TI\n2. Daftar aplikasi/sistem informasi yang digunakan",
-      },
-      "3": {
-        deskripsi: "Sudah ada rencana induk TI (IT Master Plan), sistem informasi terintegrasi, dan tata kelola TI berjalan.",
-        syarat_data_dukung: "1. Dokumen Rencana Induk TI / SPBE\n2. Laporan Evaluasi SPBE\n3. SOP Tata Kelola TI\n4. Bukti integrasi antar sistem informasi\n5. Laporan keamanan informasi",
-      },
-      "4": {
-        deskripsi: "TI sudah menjadi enabler kinerja organisasi, berbasis data, dan ada manajemen risiko TI.",
-        syarat_data_dukung: "1. Dokumen pada Level 3\n2. Dashboard data analytics organisasi\n3. Dokumen manajemen risiko TI\n4. Laporan monitoring ketersediaan sistem (uptime)",
-      },
-      "5": {
-        deskripsi: "Transformasi digital menyeluruh, Smart Governance, dan inovasi teknologi berkelanjutan.",
-        syarat_data_dukung: "1. Dokumen pada Level 4\n2. Bukti implementasi Smart City/Governance\n3. Bukti AI/Big Data/IoT dalam pelayanan\n4. Penghargaan SPBE/inovasi digital\n5. Bukti kolaborasi TI lintas OPD/daerah",
-      },
+      "1": { deskripsi: "Belum ada target/rencana kinerja perangkat daerah yang terukur.", butuh_bukti: false },
+      "2": { deskripsi: "Sudah ada target kinerja perangkat daerah, tapi belum konsisten mengacu dokumen perencanaan daerah.", butuh_bukti: true, panduan: "Perjanjian Kinerja (PK) murni dan Perjanjian Kinerja perubahan Tahun terbaru" },
+      "3": { deskripsi: "Sudah ada target kinerja perangkat daerah yang konsisten dengan dokumen perencanaan.", butuh_bukti: true, panduan: "Perjanjian Kinerja murni & perubahan Tahun terbaru, DPA murni & perubahan Tahun terbaru" },
+      "4": { deskripsi: "Target kinerja perangkat daerah sudah dilakukan pengukuran pencapaiannya.", butuh_bukti: true, panduan: "Perjanjian Kinerja murni/perubahan, DPA murni/perubahan, Laporan capaian kinerja triwulanan Tahun berjalan" },
+      "5": { deskripsi: "Pencapaian target kinerja perangkat daerah sudah diukur dan sudah tercapai dengan baik (di atas 90 %) serta telah dilakukan evaluasi pencapaian target kinerja serta didukung dengan teknologi informasi.", butuh_bukti: true, panduan: "Perjanjian Kinerja murni/perubahan, DPA murni/perubahan, Laporan capaian kinerja triwulanan, Screenshot sistem e-kinerja kepala Perangkat Daerah" },
     },
   },
   {
     id: 10,
-    soal: "Bagaimana sistem akuntabilitas kinerja instansi pemerintah (SAKIP) diterapkan?",
+    soal: "10. Bagaimana perangkat daerah Anda mengembangkan inovasi?",
+    link_drive_master: "https://drive.google.com/drive/folders/14NcO4U9TiImABrc2xPABMWnEng3SswPu?usp=sharing",
     kriteria: {
-      "1": {
-        deskripsi: "Belum ada perencanaan kinerja yang terstruktur dan pelaporan kinerja belum rutin.",
-        syarat_data_dukung: "Tidak ada data dukung",
-      },
-      "2": {
-        deskripsi: "Sudah ada Renstra, Renja, dan Perjanjian Kinerja namun belum terukur dan terintegrasi.",
-        syarat_data_dukung: "1. Dokumen Renstra OPD\n2. Dokumen Perjanjian Kinerja (PK) tahun berjalan",
-      },
-      "3": {
-        deskripsi: "SAKIP sudah berjalan dengan baik, ada cascading kinerja, dan LKJIP disusun secara komprehensif.",
-        syarat_data_dukung: "1. Renstra OPD 2024-2026\n2. Perjanjian Kinerja (PK)\n3. Rencana Aksi pencapaian kinerja\n4. LKJIP / LKj OPD tahun sebelumnya\n5. Pohon Kinerja dan cascading IKU",
-      },
-      "4": {
-        deskripsi: "SAKIP berjalan efektif, hasil evaluasi SAKIP minimal nilai 'B', dan kinerja terukur secara komprehensif.",
-        syarat_data_dukung: "1. Dokumen pada Level 3\n2. Hasil evaluasi SAKIP minimal nilai B\n3. Laporan monitoring capaian kinerja triwulan\n4. Dokumen review dan perbaikan indikator kinerja",
-      },
-      "5": {
-        deskripsi: "SAKIP sudah best practice, berbasis digital e-SAKIP, terintegrasi, dan mendapat nilai 'A'.",
-        syarat_data_dukung: "1. Dokumen pada Level 4\n2. Bukti e-SAKIP/e-Kinerja yang terintegrasi\n3. Dashboard capaian kinerja real-time\n4. Hasil evaluasi SAKIP nilai A\n5. Penghargaan/pengakuan nasional terkait SAKIP",
-      },
+      "1": { deskripsi: "Belum ada rencana pengembangan produk yang akan dilakukan secara sistematis.", butuh_bukti: false },
+      "2": { deskripsi: "Pengembangan produk dilakukan dengan mengadopsi inovasi yang dikembangkan oleh daerah lain (replikasi inovasi).", butuh_bukti: true, panduan: "Proposal inovasi OPD, Screenshot aplikasi atau foto ruang/fasilitas hasil inovasi" },
+      "3": { deskripsi: "Telah disusun rencana pengembangan inovasi baik jenis, mutu maupun metodenya.", butuh_bukti: true, panduan: "Proposal inovasi OPD, Screenshot aplikasi/foto ruang inovasi, Bukti pengembangan aplikasi / maintenance (integrasi sistem atau pengembangan versi)" },
+      "4": { deskripsi: "Telah ada inovasi yang dikembangkan sendiri oleh perangkat daerah yang bersangkutan.", butuh_bukti: true, panduan: "Proposal inovasi OPD, Screenshot aplikasi/foto hasil inovasi, Bukti maintenance/pengembangan versi, Surat Pernyataan Kepala Perangkat Daerah bahwa inovasi dikembangkan sendiri" },
+      "5": { deskripsi: "Perangkat daerah sudah mempunyai program pengkajian dan inovasi secara terencana dan berkelanjutan.", butuh_bukti: true, panduan: "Proposal inovasi, Screenshot aplikasi/foto inovasi, Bukti maintenance, Surat Pernyataan Mandiri, SK Tim Inovasi Pelayanan Publik, Rencana kerja Tim pengembangan inovasi" },
     },
   },
   {
     id: 11,
-    soal: "Bagaimana upaya peningkatan kapasitas dan inovasi organisasi?",
+    soal: "11. Bagaimana penerapan budaya organisasi di perangkat daerah Anda?",
+    link_drive_master: "https://drive.google.com/drive/folders/1vqsQUXmrGa0hYwI6flIHXNeGG2y0NPo0?usp=sharing",
     kriteria: {
-      "1": {
-        deskripsi: "Belum ada program pengembangan kapasitas yang terencana dan inovasi belum menjadi prioritas.",
-        syarat_data_dukung: "Tidak ada data dukung",
-      },
-      "2": {
-        deskripsi: "Sudah ada pelatihan/Bimtek untuk pegawai namun belum terencana secara sistematis.",
-        syarat_data_dukung: "1. Daftar pelatihan/Bimtek yang telah diikuti pegawai\n2. Surat tugas/sertifikat pelatihan",
-      },
-      "3": {
-        deskripsi: "Program pengembangan kapasitas sudah terencana, ada Knowledge Management, dan inovasi mulai didorong.",
-        syarat_data_dukung: "1. Rencana pengembangan kompetensi (HCD Plan)\n2. Laporan pelaksanaan Diklat/Bimtek\n3. Dokumen Knowledge Management/sharing\n4. Proposal inovasi yang diajukan\n5. Bukti partisipasi kompetisi inovasi",
-      },
-      "4": {
-        deskripsi: "Learning organization terbentuk, inovasi sudah diterapkan, dan ada budaya perbaikan berkelanjutan.",
-        syarat_data_dukung: "1. Dokumen pada Level 3\n2. Bukti implementasi inovasi dan dampaknya\n3. Laporan budaya inovasi (innovation culture)\n4. Dokumentasi lesson learned dan best practice",
-      },
-      "5": {
-        deskripsi: "Organisasi menjadi benchmark nasional, inovasi berkelanjutan, dan berkolaborasi aktif dalam jejaring pengetahuan.",
-        syarat_data_dukung: "1. Dokumen pada Level 4\n2. Penghargaan inovasi tingkat nasional\n3. Bukti replikasi inovasi oleh daerah lain\n4. Dokumentasi kolaborasi jejaring pengetahuan\n5. Bukti publikasi ilmiah/media",
-      },
+      "1": { deskripsi: "Belum ada budaya organisasi pada perangkat daerah.", butuh_bukti: false },
+      "2": { deskripsi: "Sudah ada slogan-slogan yang menggambarkan nilai organisasi pada perangkat daerah yang bersangkutan.", butuh_bukti: true, panduan: "Dokumentasi foto/video atau visualisasi banner nilai budaya organisasi di kantor" },
+      "3": { deskripsi: "Sudah ada dokumen budaya organisasi yang resmi menggambarkan nilai-nilai, sikap dan perilaku di perangkat daerah yang bersangkutan.", butuh_bukti: true, panduan: "Dokumentasi/visualisasi nilai budaya, Keputusan Kepala Perangkat Daerah tentang moto, nilai budaya kerja, dan janji layanan" },
+      "4": { deskripsi: "Sudah ada program internalisasi budaya organisasi yang berkelanjutan berdasarkan dokumen resmi.", butuh_bukti: true, panduan: "Dokumentasi visual nilai budaya, Keputusan Kepala Perangkat Daerah tentang janji layanan, Dokumen kertas kerja budaya kerja, Dokumen rencana program implementasi & evaluasi ditandatangani Kepala PD" },
+      "5": { deskripsi: "Budaya organisasi sudah tercermin dalam sikap dan perilaku pegawai pada perangkat daerah yang bersangkutan berdasarkan hasil evaluasi secara rutin dan berkelanjutan.", butuh_bukti: true, panduan: "Dokumentasi visual nilai budaya, Keputusan Kepala Perangkat Daerah, Dokumen kertas kerja, Dokumen rencana program & evaluasi tertulis, Dokumentasi foto/video pelaksanaan program budaya kerja nyata" },
     },
   },
 ];

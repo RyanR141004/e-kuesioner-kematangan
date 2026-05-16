@@ -91,22 +91,26 @@ export default function KuesionerPage() {
 
     for (const j of data.jawaban) {
       if (!j.tingkat_capaian || j.tingkat_capaian === 0) {
-        const q = INSTRUMEN_PERTANYAAN.find((q) => q.id === j.pertanyaan_id);
-        showToast('error', `Silakan pilih tingkat capaian untuk pertanyaan ${q?.id}`);
+        showToast('error', `Silakan pilih tingkat capaian untuk pertanyaan ${j.pertanyaan_id}`);
         return;
       }
     }
 
+    // Validate drive links for levels that need bukti
     for (const j of data.jawaban) {
-      if (j.tingkat_capaian > 1) {
+      const pertanyaan = INSTRUMEN_PERTANYAAN.find((q) => q.id === j.pertanyaan_id);
+      const levelKey = j.tingkat_capaian.toString() as "1" | "2" | "3" | "4" | "5";
+      const kriteria = pertanyaan?.kriteria[levelKey];
+
+      if (kriteria?.butuh_bukti) {
         if (!j.link_drive_dukung || j.link_drive_dukung.trim() === '') {
-          showToast('error', `Link Data Dukung wajib diisi untuk pertanyaan ${j.pertanyaan_id} (Level ${j.tingkat_capaian})`);
+          showToast('error', `Link bukti dukung wajib diisi untuk pertanyaan ${j.pertanyaan_id} (${LEVEL_LABELS[j.tingkat_capaian]})`);
           return;
         }
         try {
           new URL(j.link_drive_dukung);
         } catch {
-          showToast('error', `URL tidak valid untuk pertanyaan ${j.pertanyaan_id}. Pastikan format benar.`);
+          showToast('error', `URL tidak valid untuk pertanyaan ${j.pertanyaan_id}. Pastikan format benar (contoh: https://drive.google.com/...)`);
           return;
         }
       }
@@ -133,11 +137,16 @@ export default function KuesionerPage() {
           opd_id: profile?.id,
           kelembagaan_id: data.kelembagaan_id,
           periode_tahun: data.periode_tahun,
-          jawaban: data.jawaban.map((j) => ({
-            variabel_id: variabelMap.get(j.pertanyaan_id) || j.pertanyaan_id.toString(),
-            tingkat_capaian: j.tingkat_capaian,
-            link_drive_dukung: j.tingkat_capaian > 1 ? j.link_drive_dukung : null,
-          })),
+          jawaban: data.jawaban.map((j) => {
+            const pertanyaan = INSTRUMEN_PERTANYAAN.find((q) => q.id === j.pertanyaan_id);
+            const levelKey = j.tingkat_capaian.toString() as "1" | "2" | "3" | "4" | "5";
+            const kriteria = pertanyaan?.kriteria[levelKey];
+            return {
+              variabel_id: variabelMap.get(j.pertanyaan_id) || j.pertanyaan_id.toString(),
+              tingkat_capaian: j.tingkat_capaian,
+              link_drive_dukung: kriteria?.butuh_bukti ? j.link_drive_dukung : null,
+            };
+          }),
         }),
       });
 
@@ -147,7 +156,7 @@ export default function KuesionerPage() {
         throw new Error(result.error || 'Gagal menyimpan evaluasi');
       }
 
-      showToast('success', `✅ Data berhasil disimpan! Skor: ${result.total_skor} — ${result.level_kematangan}`);
+      showToast('success', `Data berhasil disimpan! Skor: ${result.total_skor} — ${result.level_kematangan}`);
 
       setTimeout(() => {
         router.push('/dashboard');
@@ -245,7 +254,6 @@ export default function KuesionerPage() {
             const currentLevel = watchJawaban?.[index]?.tingkat_capaian ?? 0;
             const levelKey = currentLevel.toString() as "1" | "2" | "3" | "4" | "5";
             const selectedKriteria = currentLevel > 0 ? pertanyaan.kriteria[levelKey] : null;
-            const needBukti = selectedKriteria && selectedKriteria.syarat_data_dukung !== "Tidak ada data dukung";
 
             return (
               <motion.div
@@ -275,7 +283,7 @@ export default function KuesionerPage() {
                   </h3>
                 </div>
 
-                {/* Level selection */}
+                {/* Level selection - Radio buttons */}
                 <div style={{ marginBottom: 12 }}>
                   <label className="form-label" style={{ marginBottom: 10 }}>
                     Pilih Tingkat Capaian <span className="form-required">*</span>
@@ -291,7 +299,9 @@ export default function KuesionerPage() {
                           style={{
                             display: 'flex', alignItems: 'flex-start', gap: 12,
                             padding: '12px 16px', borderRadius: 12, cursor: 'pointer',
-                            background: isSelected ? `rgba(${level === 1 ? '239,68,68' : level === 2 ? '249,115,22' : level === 3 ? '234,179,8' : level === 4 ? '34,197,94' : '59,130,246'},0.08)` : 'rgba(255,255,255,0.02)',
+                            background: isSelected
+                              ? `rgba(${level === 1 ? '239,68,68' : level === 2 ? '249,115,22' : level === 3 ? '234,179,8' : level === 4 ? '34,197,94' : '59,130,246'},0.08)`
+                              : 'rgba(255,255,255,0.02)',
                             border: `1.5px solid ${isSelected ? LEVEL_COLORS[level] + '60' : 'rgba(255,255,255,0.06)'}`,
                             transition: 'all 0.25s ease',
                           }}
@@ -305,11 +315,12 @@ export default function KuesionerPage() {
                           />
                           <div style={{ flex: 1 }}>
                             <div style={{
-                              fontWeight: 600, fontSize: 13, color: isSelected ? LEVEL_COLORS[level] : 'var(--text-primary)',
+                              fontWeight: 600, fontSize: 13,
+                              color: isSelected ? LEVEL_COLORS[level] : 'var(--text-primary)',
                               display: 'flex', alignItems: 'center', gap: 8,
                             }}>
                               {LEVEL_LABELS[level]}
-                              {level === 1 && (
+                              {!kriteria.butuh_bukti && (
                                 <span style={{
                                   fontSize: 10, padding: '1px 8px', borderRadius: 4,
                                   background: 'rgba(107,114,128,0.15)', color: 'var(--text-muted)',
@@ -318,7 +329,7 @@ export default function KuesionerPage() {
                                 </span>
                               )}
                             </div>
-                            <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginTop: 4, lineHeight: 1.5 }}>
+                            <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginTop: 4, lineHeight: 1.6 }}>
                               {kriteria.deskripsi}
                             </div>
                           </div>
@@ -328,7 +339,9 @@ export default function KuesionerPage() {
                   </div>
                 </div>
 
-                {/* Dynamic Criteria Callout */}
+                {/* ============================================ */}
+                {/* DYNAMIC PANDUAN ALERT + DRIVE LINK + INPUT   */}
+                {/* ============================================ */}
                 <AnimatePresence>
                   {selectedKriteria && currentLevel > 0 && (
                     <motion.div
@@ -338,36 +351,97 @@ export default function KuesionerPage() {
                       transition={{ duration: 0.3 }}
                       style={{ overflow: 'hidden' }}
                     >
-                      <div style={{
-                        padding: 16, borderRadius: 12, marginTop: 4, marginBottom: needBukti ? 12 : 0,
-                        background: `rgba(${currentLevel === 1 ? '239,68,68' : currentLevel === 2 ? '249,115,22' : currentLevel === 3 ? '234,179,8' : currentLevel === 4 ? '34,197,94' : '59,130,246'},0.06)`,
-                        borderLeft: `3px solid ${LEVEL_COLORS[currentLevel]}`,
-                      }}>
-                        <div style={{ fontSize: 12, fontWeight: 700, color: LEVEL_COLORS[currentLevel], marginBottom: 8, textTransform: 'uppercase', letterSpacing: 0.5 }}>
-                          📌 Syarat Data Dukung — {LEVEL_LABELS[currentLevel]}
-                        </div>
-                        <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.8, whiteSpace: 'pre-line' }}>
-                          {selectedKriteria.syarat_data_dukung}
-                        </div>
-                      </div>
+                      {/* Panduan Alert Box (only if butuh_bukti) */}
+                      {selectedKriteria.butuh_bukti && selectedKriteria.panduan && (
+                        <div style={{
+                          padding: 16, borderRadius: 12, marginBottom: 12,
+                          background: 'rgba(59,130,246,0.06)',
+                          borderLeft: `3px solid ${LEVEL_COLORS[currentLevel]}`,
+                        }}>
+                          <div style={{
+                            fontSize: 12, fontWeight: 700, marginBottom: 10,
+                            color: LEVEL_COLORS[currentLevel],
+                            textTransform: 'uppercase', letterSpacing: 0.5,
+                          }}>
+                            📌 Panduan Data Dukung — {LEVEL_LABELS[currentLevel]}
+                          </div>
+                          <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.8 }}>
+                            {/* Render panduan items as a list */}
+                            {selectedKriteria.panduan.split(', ').map((item, i) => (
+                              <div key={i} style={{ display: 'flex', gap: 8, marginBottom: 4, alignItems: 'flex-start' }}>
+                                <span style={{ color: LEVEL_COLORS[currentLevel], fontSize: 11, marginTop: 2, flexShrink: 0 }}>●</span>
+                                <span>{item.trim()}</span>
+                              </div>
+                            ))}
+                          </div>
 
-                      {/* Drive link input (only for level > 1) */}
-                      {needBukti && (
+                          {/* Drive Master Button */}
+                          <a
+                            href={pertanyaan.link_drive_master}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{
+                              display: 'inline-flex', alignItems: 'center', gap: 8,
+                              marginTop: 14, padding: '10px 20px', borderRadius: 10,
+                              background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
+                              color: 'white', fontSize: 13, fontWeight: 700,
+                              textDecoration: 'none', transition: 'all 0.2s ease',
+                              boxShadow: '0 2px 10px rgba(99,102,241,0.25)',
+                            }}
+                            onMouseOver={(e) => {
+                              e.currentTarget.style.transform = 'translateY(-1px)';
+                              e.currentTarget.style.boxShadow = '0 4px 20px rgba(99,102,241,0.4)';
+                            }}
+                            onMouseOut={(e) => {
+                              e.currentTarget.style.transform = 'translateY(0)';
+                              e.currentTarget.style.boxShadow = '0 2px 10px rgba(99,102,241,0.25)';
+                            }}
+                          >
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+                            </svg>
+                            Buka Folder Panduan & Upload Bukti
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                              <path d="M7 17L17 7M7 7h10v10" />
+                            </svg>
+                          </a>
+                        </div>
+                      )}
+
+                      {/* No-bukti info (Level 1) */}
+                      {!selectedKriteria.butuh_bukti && (
+                        <div style={{
+                          padding: 12, borderRadius: 10, marginBottom: 12,
+                          background: 'rgba(107,114,128,0.08)',
+                          border: '1px dashed rgba(107,114,128,0.2)',
+                          display: 'flex', alignItems: 'center', gap: 8,
+                        }}>
+                          <span style={{ fontSize: 16 }}>✓</span>
+                          <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>
+                            Level ini tidak memerlukan data dukung.
+                          </span>
+                        </div>
+                      )}
+
+                      {/* Drive link input (only when butuh_bukti is true) */}
+                      {selectedKriteria.butuh_bukti && (
                         <div style={{
                           padding: 16, borderRadius: 12,
-                          background: 'rgba(245,158,11,0.05)', border: '1px solid rgba(245,158,11,0.2)',
+                          background: 'rgba(245,158,11,0.05)',
+                          border: '1px solid rgba(245,158,11,0.2)',
                         }}>
                           <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                            🔗 Link Google Drive Data Dukung <span className="form-required">*</span>
+                            🔗 Link Dokumen Bukti Anda <span className="form-required">*</span>
                           </label>
                           <input
                             type="url"
                             className="form-input"
                             placeholder="https://drive.google.com/drive/folders/..."
                             {...register(`jawaban.${index}.link_drive_dukung`)}
+                            required
                           />
                           <p className="form-hint" style={{ marginTop: 6 }}>
-                            Upload dokumen sesuai syarat di atas ke Google Drive, lalu tempelkan link folder-nya di sini
+                            Upload dokumen sesuai panduan di atas ke Google Drive Anda, lalu tempelkan link folder-nya di sini
                           </p>
                         </div>
                       )}
@@ -379,7 +453,7 @@ export default function KuesionerPage() {
           })}
         </div>
 
-        {/* Submit */}
+        {/* Submit bar */}
         <div className="card" style={{
           display: 'flex', justifyContent: 'space-between', alignItems: 'center',
           position: 'sticky', bottom: 20, backdropFilter: 'blur(10px)',
@@ -391,7 +465,7 @@ export default function KuesionerPage() {
               {progress === 100 ? '✅ Semua pertanyaan telah dijawab!' : `${watchJawaban?.filter(j => j.tingkat_capaian > 0).length || 0} dari ${INSTRUMEN_PERTANYAAN.length} pertanyaan dijawab`}
             </p>
             <p style={{ fontSize: 12, color: 'var(--text-muted)', margin: '4px 0 0' }}>
-              Pastikan semua jawaban dan bukti data dukung sudah benar
+              Pastikan semua jawaban dan bukti data dukung sudah benar sebelum submit
             </p>
           </div>
           <motion.button
