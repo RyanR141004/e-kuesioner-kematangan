@@ -15,7 +15,6 @@ interface FormValues {
   jawaban: {
     pertanyaan_id: number;
     tingkat_capaian: number;
-    link_drive_dukung: string;
   }[];
 }
 
@@ -52,7 +51,6 @@ export default function KuesionerPage() {
       jawaban: INSTRUMEN_PERTANYAAN.map((q) => ({
         pertanyaan_id: q.id,
         tingkat_capaian: 0,
-        link_drive_dukung: '',
       })),
     },
   });
@@ -96,26 +94,6 @@ export default function KuesionerPage() {
       }
     }
 
-    // Validate drive links for levels that need bukti
-    for (const j of data.jawaban) {
-      const pertanyaan = INSTRUMEN_PERTANYAAN.find((q) => q.id === j.pertanyaan_id);
-      const levelKey = j.tingkat_capaian.toString() as "1" | "2" | "3" | "4" | "5";
-      const kriteria = pertanyaan?.kriteria[levelKey];
-
-      if (kriteria?.butuh_bukti) {
-        if (!j.link_drive_dukung || j.link_drive_dukung.trim() === '') {
-          showToast('error', `Link bukti dukung wajib diisi untuk pertanyaan ${j.pertanyaan_id} (${LEVEL_LABELS[j.tingkat_capaian]})`);
-          return;
-        }
-        try {
-          new URL(j.link_drive_dukung);
-        } catch {
-          showToast('error', `URL tidak valid untuk pertanyaan ${j.pertanyaan_id}. Pastikan format benar (contoh: https://drive.google.com/...)`);
-          return;
-        }
-      }
-    }
-
     setSubmitting(true);
 
     try {
@@ -137,16 +115,11 @@ export default function KuesionerPage() {
           opd_id: profile?.id,
           kelembagaan_id: data.kelembagaan_id,
           periode_tahun: data.periode_tahun,
-          jawaban: data.jawaban.map((j) => {
-            const pertanyaan = INSTRUMEN_PERTANYAAN.find((q) => q.id === j.pertanyaan_id);
-            const levelKey = j.tingkat_capaian.toString() as "1" | "2" | "3" | "4" | "5";
-            const kriteria = pertanyaan?.kriteria[levelKey];
-            return {
-              variabel_id: variabelMap.get(j.pertanyaan_id) || j.pertanyaan_id.toString(),
-              tingkat_capaian: j.tingkat_capaian,
-              link_drive_dukung: kriteria?.butuh_bukti ? j.link_drive_dukung : null,
-            };
-          }),
+          jawaban: data.jawaban.map((j) => ({
+            variabel_id: variabelMap.get(j.pertanyaan_id) || j.pertanyaan_id.toString(),
+            tingkat_capaian: j.tingkat_capaian,
+            link_drive_dukung: null,
+          })),
         }),
       });
 
@@ -423,28 +396,7 @@ export default function KuesionerPage() {
                         </div>
                       )}
 
-                      {/* Drive link input (only when butuh_bukti is true) */}
-                      {selectedKriteria.butuh_bukti && (
-                        <div style={{
-                          padding: 16, borderRadius: 12,
-                          background: 'rgba(245,158,11,0.05)',
-                          border: '1px solid rgba(245,158,11,0.2)',
-                        }}>
-                          <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                            🔗 Link Dokumen Bukti Anda <span className="form-required">*</span>
-                          </label>
-                          <input
-                            type="url"
-                            className="form-input"
-                            placeholder="https://drive.google.com/drive/folders/..."
-                            {...register(`jawaban.${index}.link_drive_dukung`)}
-                            required
-                          />
-                          <p className="form-hint" style={{ marginTop: 6 }}>
-                            Upload dokumen sesuai panduan di atas ke Google Drive Anda, lalu tempelkan link folder-nya di sini
-                          </p>
-                        </div>
-                      )}
+
                     </motion.div>
                   )}
                 </AnimatePresence>
