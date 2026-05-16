@@ -111,11 +111,11 @@ export function isValidUrl(url: string): boolean {
  * Tingkat labels with detailed descriptions
  */
 export const TINGKAT_OPTIONS = [
-  { value: 1, label: 'Tingkat I (Initial)', desc: 'Belum ada prosedur/mekanisme yang terdokumentasi. Pelaksanaan bersifat ad-hoc.', needBukti: false },
-  { value: 2, label: 'Tingkat II (Developing)', desc: 'Sudah ada prosedur awal namun belum terdokumentasi secara formal dan belum konsisten diterapkan.', needBukti: true },
-  { value: 3, label: 'Tingkat III (Defined)', desc: 'Prosedur sudah terdokumentasi dalam SOP dan diterapkan secara konsisten di seluruh unit.', needBukti: true },
-  { value: 4, label: 'Tingkat IV (Managed)', desc: 'Prosedur sudah terukur, dimonitoring secara berkala, dan ada mekanisme evaluasi untuk perbaikan.', needBukti: true },
-  { value: 5, label: 'Tingkat V (Optimized)', desc: 'Sistem sudah optimal, terintegrasi, berbasis data, dan dilakukan inovasi berkelanjutan.', needBukti: true },
+  { value: 1, label: 'Tingkat I (Initial)', desc: 'Belum ada prosedur/mekanisme yang terdokumentasi.', needBukti: false },
+  { value: 2, label: 'Tingkat II (Developing)', desc: 'Sudah ada prosedur awal namun belum terdokumentasi formal.', needBukti: true },
+  { value: 3, label: 'Tingkat III (Defined)', desc: 'Prosedur sudah terdokumentasi dan diterapkan konsisten.', needBukti: true },
+  { value: 4, label: 'Tingkat IV (Managed)', desc: 'Prosedur terukur, dimonitoring berkala, ada evaluasi.', needBukti: true },
+  { value: 5, label: 'Tingkat V (Optimized)', desc: 'Sistem optimal, terintegrasi, berbasis data, inovasi berkelanjutan.', needBukti: true },
 ];
 
 /**
