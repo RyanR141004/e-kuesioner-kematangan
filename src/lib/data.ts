@@ -3,12 +3,12 @@
  * Berdasarkan Permendagri No 99 Tahun 2018
  *
  * SINGLE SOURCE OF TRUTH untuk merender kuesioner.
- * Berisi 29 Kelembagaan + 11 Instrumen Pertanyaan lengkap
+ * Berisi 28 Kelembagaan + 11 Instrumen Pertanyaan lengkap
  * dengan link_drive_master, kriteria level 1-5, dan panduan data dukung.
  */
 
 // =========================================================
-// DAFTAR KELEMBAGAAN (29 Entitas)
+// DAFTAR KELEMBAGAAN (28 Entitas)
 // =========================================================
 export const DAFTAR_KELEMBAGAAN = [
   "Sekretariat Daerah",
@@ -38,7 +38,6 @@ export const DAFTAR_KELEMBAGAAN = [
   "Dinas Sosial, Pemberdayaan Perempuan, Perlindungan Anak, Pengendalian Penduduk dan KB",
   "Kecamatan Blimbing",
   "Kecamatan Lowokwaru",
-  "Bagian Organisasi",
   "Bagian Hukum",
 ] as const;
 

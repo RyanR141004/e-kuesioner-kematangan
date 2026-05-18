@@ -34,8 +34,7 @@ INSERT INTO kelembagaan (nama, urutan) VALUES
 ('Dinas Sosial, Pemberdayaan Perempuan, Perlindungan Anak, Pengendalian Penduduk dan KB', 25),
 ('Kecamatan Blimbing', 26),
 ('Kecamatan Lowokwaru', 27),
-('Bagian Organisasi', 28),
-('Bagian Hukum', 29)
+('Bagian Hukum', 28)
 ON CONFLICT (nama) DO NOTHING;
 
 -- 2. Tambah kolom kelembagaan_id ke transaksi_evaluasi

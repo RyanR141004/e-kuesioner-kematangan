@@ -41,7 +41,7 @@ export default function HomePage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.6 }}
         >
-          Sistem evaluasi mandiri (self-assessment) tingkat kematangan 29 Perangkat Daerah
+          Sistem evaluasi mandiri (self-assessment) tingkat kematangan 28 Perangkat Daerah
           berdasarkan <strong style={{ color: '#e2e8f0' }}>Permendagri No 99 Tahun 2018</strong>
         </motion.p>
 
@@ -68,7 +68,7 @@ export default function HomePage() {
         >
           {[
             { icon: '📋', label: '11 Instrumen' },
-            { icon: '🏛️', label: '29 Kelembagaan' },
+            { icon: '🏛️', label: '28 Kelembagaan' },
             { icon: '🏆', label: 'Ranking Otomatis' },
             { icon: '📄', label: 'Export PDF & Excel' },
           ].map((f, i) => (
