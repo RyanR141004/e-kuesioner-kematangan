@@ -48,5 +48,8 @@ DROP POLICY IF EXISTS "Authenticated can read kelembagaan" ON kelembagaan;
 CREATE POLICY "Authenticated can read kelembagaan" ON kelembagaan
   FOR SELECT USING (auth.role() = 'authenticated');
 
--- 5. Verifikasi: cek jumlah kelembagaan
+-- 5. Hapus "Bagian Organisasi" jika sudah terlanjur ada di database
+DELETE FROM kelembagaan WHERE nama = 'Bagian Organisasi';
+
+-- 6. Verifikasi: cek jumlah kelembagaan
 SELECT COUNT(*) AS total_kelembagaan FROM kelembagaan;
